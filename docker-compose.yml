@@ -8,6 +8,7 @@ services:
       - ft-kafka-proxy
     environment:
       - KAFKA_PROXY=${DOCKER_MACHINE_IP}:8082/
+      - VULCAN_HOST=${DOCKER_MACHINE_IP}:8082/
       - JAVA_OPTS=-Xms256m -Xmx256m -XX:+UseG1GC -server
     ports:
       - "8080:8080"
@@ -35,6 +36,7 @@ services:
     image: coco/kafka-proxy:v1.0.0
     links:
       - ft-zookeper
+      - ft-kafka
     environment:
       - RP_ZOOKEEPER_CONNECT=${DOCKER_MACHINE_IP}:2181
       - RP_FETCH_MESSAGE_MAX_BYTES=16777216

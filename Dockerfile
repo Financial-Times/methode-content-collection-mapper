@@ -4,9 +4,7 @@ COPY . /
 
 RUN apk --update add git \
  && HASH=$(git log -1 --pretty=format:%H) \
- && BUILD_NUMBER=$(cat ../buildnum.txt) \
- && BUILD_URL=$(cat ../buildurl.txt) \
- && mvn install -Dbuild.git.revision=$HASH -Dbuild.git.revision=$HASH -Dbuild.number=$BUILD_NUMBER -Dbuild.url=$BUILD_URL -Djava.net.preferIPv4Stack=true \
+ && mvn install -DskipTests=true -Dbuild.git.revision=$HASH -Djava.net.preferIPv4Stack=true \
  && rm -f target/methode-story-package-mapper-*sources.jar \
  && mv target/methode-story-package-mapper-*.jar /methode-story-package-mapper.jar \
  && mv methode-story-package-mapper.yaml /config.yaml \
