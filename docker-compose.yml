@@ -1,0 +1,44 @@
+version: '2'
+services:
+  app:
+    build: .
+    depends_on:
+      - ft-kafka
+      - ft-zookeper
+      - ft-kafka-proxy
+    environment:
+      - KAFKA_PROXY=${DOCKER_MACHINE_IP}:8082/
+      - JAVA_OPTS=-Xms256m -Xmx256m -XX:+UseG1GC -server
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+  ft-zookeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  ft-kafka:
+    image: wurstmeister/kafka:0.8.2.0
+    links:
+      - ft-zookeper
+    environment:
+      - KAFKA_MESSAGE_MAX_BYTES=16777216
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=16777216
+      - KAFKA_ZOOKEEPER_CONNECT=${DOCKER_MACHINE_IP}:2181
+      - KAFKA_ADVERTISED_HOST_NAME=${DOCKER_MACHINE_IP}
+    ports:
+      - "9092:9092"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  ft-kafka-proxy:
+    image: coco/kafka-proxy:v1.0.0
+    links:
+      - ft-zookeper
+    environment:
+      - RP_ZOOKEEPER_CONNECT=${DOCKER_MACHINE_IP}:2181
+      - RP_FETCH_MESSAGE_MAX_BYTES=16777216
+      - RP_CONSUMER_REQUEST_MAX_BYTES=17825792
+      - RP_MAX_REQUEST_SIZE=17825792
+    ports:
+      - "8082:8082"
