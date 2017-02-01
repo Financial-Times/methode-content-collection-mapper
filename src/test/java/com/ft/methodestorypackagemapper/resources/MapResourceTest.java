@@ -63,11 +63,6 @@ public class MapResourceTest {
                 HttpStatus.SC_UNPROCESSABLE_ENTITY);
     }
 
-    @Test
-    public void thatForAnyRuntimeException500IsReturned() {
-        exceptionIsThrownAndStatusCodeIsExpected(new RuntimeException(), HttpStatus.SC_INTERNAL_SERVER_ERROR);
-    }
-
     private <T extends Exception> void exceptionIsThrownAndStatusCodeIsExpected(T exception, int status) {
         try {
             when(mockEomStoryPackageMapper.mapStoryPackage(eq(eomfile), anyString(), Matchers.any()))

@@ -27,6 +27,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ft.messaging.standards.message.v1.Message;
+import com.ft.methodestorypackagemapper.exception.StoryPackageMapperException;
 import com.ft.methodestorypackagemapper.model.StoryPackage;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -85,14 +86,14 @@ public class MessageBuilderTest {
         assertThat(msgContent.get("uuid"), equalTo(UUID.toString()));
     }
 
-    @Test
-    public void thatListMapperExceptionIsThrownIfMarshallingToStringFails() throws JsonProcessingException {
-        StoryPackage list = new StoryPackage.Builder().withUuid(UUID.toString()).withLastModified(new Date())
+    @Test(expected = StoryPackageMapperException.class)
+    public void thatStoryPackageMapperExceptionIsThrownIfMarshallingToStringFails() throws JsonProcessingException {
+        StoryPackage storyPackage = new StoryPackage.Builder().withUuid(UUID.toString()).withLastModified(new Date())
                 .withPublishReference(PUBLISH_REFERENCE).build();
-        when(contentUriBuilder.build(list.getUuid())).thenReturn(URI.create("foobar"));
+        when(contentUriBuilder.build(storyPackage.getUuid())).thenReturn(URI.create("foobar"));
         when(objectMapper.writeValueAsString(anyMap())).thenThrow(new JsonMappingException("oh-oh"));
 
-        messageBuilder.buildMessage(list);
+        messageBuilder.buildMessage(storyPackage);
     }
 
 }
