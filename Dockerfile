@@ -1,4 +1,4 @@
-FROM up-registry.ft.com/coco/dropwizardbase
+FROM coco/dropwizardbase
 
 COPY . /
 
