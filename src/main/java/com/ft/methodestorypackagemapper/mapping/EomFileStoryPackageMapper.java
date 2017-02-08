@@ -30,23 +30,21 @@ public class EomFileStoryPackageMapper {
     private static final String XPATH_CONTAINER_WEB_TYPE = "ObjectMetadata/FTcom/DIFTcomWebType";
 
     public StoryPackage mapStoryPackage(EomFile eomFile, String transactionId, Date lastModified) {
-        UUID uuid = UUID.fromString(eomFile.getUuid());
-
         try {
             XPath xpath = XPathFactory.newInstance().newXPath();
             Document attributesDocument = getDocumentBuilder()
                     .parse(new InputSource(new StringReader(eomFile.getAttributes())));
-            verifyWebType(xpath, attributesDocument, uuid);
+            verifyWebType(xpath, attributesDocument, eomFile.getUuid());
 
-            StoryPackage.Builder builder = new StoryPackage.Builder();
-            return builder.withUuid(uuid.toString()).withItems(extractItems(eomFile.getLinkedObjects(), transactionId))
-                    .withPublishReference(transactionId).withLastModified(lastModified).build();
+            return new StoryPackage.Builder().withUuid(eomFile.getUuid())
+                    .withItems(extractItems(eomFile.getLinkedObjects())).withPublishReference(transactionId)
+                    .withLastModified(lastModified).build();
         } catch (ParserConfigurationException | SAXException | XPathExpressionException | IOException e) {
             throw new TransformationException(e);
         }
     }
 
-    private List<Item> extractItems(List<EomLinkedObject> linkedObjects, String transactionId) throws SAXException, IOException, ParserConfigurationException, XPathExpressionException {
+    private List<Item> extractItems(List<EomLinkedObject> linkedObjects) throws SAXException, IOException, ParserConfigurationException, XPathExpressionException {
         List<Item> listItems = new ArrayList<>();
 
         for (EomLinkedObject linkedObject : linkedObjects) {
@@ -65,7 +63,7 @@ public class EomFileStoryPackageMapper {
         return documentBuilderFactory.newDocumentBuilder();
     }
 
-    private void verifyWebType(XPath xpath, Document attributesDocument, UUID uuid) throws XPathExpressionException {
+    private void verifyWebType(XPath xpath, Document attributesDocument, String uuid) throws XPathExpressionException {
         final String webType = xpath.evaluate(XPATH_CONTAINER_WEB_TYPE, attributesDocument);
         boolean valid = false;
         if (!Strings.isNullOrEmpty(webType)) {

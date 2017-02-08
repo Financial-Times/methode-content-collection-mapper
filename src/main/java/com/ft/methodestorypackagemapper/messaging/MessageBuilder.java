@@ -11,9 +11,6 @@ import java.util.UUID;
 
 import javax.ws.rs.core.UriBuilder;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,7 +21,6 @@ import com.ft.methodestorypackagemapper.exception.StoryPackageMapperException;
 import com.ft.methodestorypackagemapper.model.StoryPackage;
 
 public class MessageBuilder {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MessageBuilder.class);
     private static final String CMS_CONTENT_PUBLISHED = "cms-content-published";
     private static final DateTimeFormatter RFC3339_FMT = DateTimeFormatter.ISO_OFFSET_DATE_TIME
             .withResolverStyle(ResolverStyle.STRICT);
@@ -39,7 +35,7 @@ public class MessageBuilder {
         this.objectMapper = objectMapper;
     }
 
-    Message buildMessage(StoryPackage storyPackage) {
+    public Message buildMessage(StoryPackage storyPackage) {
         MessageBody msgBody = new MessageBody(storyPackage, contentUriBuilder.build(storyPackage.getUuid()).toString(),
                 RFC3339_FMT.format(OffsetDateTime.ofInstant(storyPackage.getLastModified().toInstant(), UTC)),
                 storyPackage.getUuid());
@@ -56,7 +52,6 @@ public class MessageBuilder {
             throw new StoryPackageMapperException("unable to write JSON for message", e);
         }
 
-        LOGGER.info("Message transformed: {}", msg.toStringFull());
         return msg;
     }
 

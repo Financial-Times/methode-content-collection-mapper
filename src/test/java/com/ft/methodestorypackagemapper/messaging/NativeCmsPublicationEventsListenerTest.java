@@ -22,9 +22,11 @@ import com.ft.messagequeueproducer.MessageProducer;
 import com.ft.messaging.standards.message.v1.Message;
 import com.ft.messaging.standards.message.v1.SystemId;
 import com.ft.methodestorypackagemapper.model.EomFile;
+import com.ft.methodestorypackagemapper.validation.StoryPackageValidator;
 
 @RunWith(MockitoJUnitRunner.class)
 public class NativeCmsPublicationEventsListenerTest {
+    private static final String UUID_STORY_PACKAGE = UUID.randomUUID().toString();
     private static final String EOM_WEB_CONTAINER = "EOM::WebContainer";
     private static final String SYSTEM_CODE = "foobar";
     private static final String TX_ID = "tid_foo";
@@ -40,11 +42,27 @@ public class NativeCmsPublicationEventsListenerTest {
     @Mock
     private UriBuilder contentUriBuilder;
 
+    private StoryPackageValidator storyPackageValidator;
     private NativeCmsPublicationEventsListener listener;
 
     @Before
     public void setUp() {
-        listener = new NativeCmsPublicationEventsListener(msgProducingStoryPackageMapper, objectMapper, SYSTEM_CODE);
+        storyPackageValidator = new StoryPackageValidator();
+        listener = new NativeCmsPublicationEventsListener(msgProducingStoryPackageMapper, objectMapper,
+                storyPackageValidator, SYSTEM_CODE);
+    }
+
+    @Test
+    public void thatMessageIsSuccessfullyMapped() throws Exception {
+        Message msg = new Message();
+        msg.setOriginSystemId(SystemId.systemIdFromCode(SYSTEM_CODE));
+        msg.setMessageTimestamp(new Date());
+        msg.setMessageBody(
+                objectMapper.writeValueAsString(buildStoryPackageEomFile(UUID_STORY_PACKAGE, EOM_WEB_CONTAINER)));
+
+        listener.onMessage(msg, TX_ID);
+
+        verify(msgProducingStoryPackageMapper).mapStoryPackage(Matchers.any(), eq(TX_ID), Matchers.any());
     }
 
     @Test
@@ -52,7 +70,22 @@ public class NativeCmsPublicationEventsListenerTest {
         Message msg = new Message();
         msg.setOriginSystemId(SystemId.systemIdFromCode("foobaz"));
         msg.setMessageTimestamp(new Date());
-        msg.setMessageBody(objectMapper.writeValueAsString(buildStoryPackageEomFile(EOM_WEB_CONTAINER)));
+        msg.setMessageBody(
+                objectMapper.writeValueAsString(buildStoryPackageEomFile(UUID_STORY_PACKAGE, EOM_WEB_CONTAINER)));
+
+        listener.onMessage(msg, TX_ID);
+
+        verify(msgProducingStoryPackageMapper, never()).mapStoryPackage(Matchers.any(), anyString(), Matchers.any());
+    }
+
+    @Test
+    public void thatMessageIsIgnoredIfNotSupportedUuidDetected() throws Exception {
+        Message msg = new Message();
+        msg.setOriginSystemId(SystemId.systemIdFromCode(SYSTEM_CODE));
+        msg.setMessageTimestamp(new Date());
+
+        EomFile storyPackageEomFile = buildStoryPackageEomFile("abc", "foobaz");
+        msg.setMessageBody(objectMapper.writeValueAsString(storyPackageEomFile));
 
         listener.onMessage(msg, TX_ID);
 
@@ -64,26 +97,14 @@ public class NativeCmsPublicationEventsListenerTest {
         Message msg = new Message();
         msg.setOriginSystemId(SystemId.systemIdFromCode(SYSTEM_CODE));
         msg.setMessageTimestamp(new Date());
-        msg.setMessageBody(objectMapper.writeValueAsString(buildStoryPackageEomFile("foobaz")));
+        msg.setMessageBody(objectMapper.writeValueAsString(buildStoryPackageEomFile(UUID_STORY_PACKAGE, "foobaz")));
 
         listener.onMessage(msg, TX_ID);
 
         verify(msgProducingStoryPackageMapper, never()).mapStoryPackage(Matchers.any(), anyString(), Matchers.any());
     }
 
-    @Test
-    public void thatMessageIsMappedIfCorrectSystemIDAndContentType() throws Exception {
-        Message msg = new Message();
-        msg.setOriginSystemId(SystemId.systemIdFromCode(SYSTEM_CODE));
-        msg.setMessageTimestamp(new Date());
-        msg.setMessageBody(objectMapper.writeValueAsString(buildStoryPackageEomFile(EOM_WEB_CONTAINER)));
-
-        listener.onMessage(msg, TX_ID);
-
-        verify(msgProducingStoryPackageMapper).mapStoryPackage(Matchers.any(), eq(TX_ID), Matchers.any());
-    }
-
-    private EomFile buildStoryPackageEomFile(String type) {
-        return new EomFile(UUID.randomUUID().toString(), type, null, null, "Stories/Write", null, null, null);
+    private EomFile buildStoryPackageEomFile(String uuid, String type) {
+        return new EomFile(uuid, type, null, null, "Stories/Write", null, null, null);
     }
 }

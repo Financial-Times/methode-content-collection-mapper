@@ -25,9 +25,11 @@ import com.ft.methodestorypackagemapper.mapping.EomFileStoryPackageMapper;
 import com.ft.methodestorypackagemapper.messaging.MessageBuilder;
 import com.ft.methodestorypackagemapper.messaging.MessageProducingStoryPackageMapper;
 import com.ft.methodestorypackagemapper.messaging.NativeCmsPublicationEventsListener;
-import com.ft.methodestorypackagemapper.resources.IngestResource;
-import com.ft.methodestorypackagemapper.resources.MapResource;
+import com.ft.methodestorypackagemapper.resources.MethodeStoryPackageResource;
+import com.ft.methodestorypackagemapper.validation.StoryPackageValidator;
 import com.ft.platform.dropwizard.AdvancedHealthCheckBundle;
+import com.ft.platform.dropwizard.DefaultGoodToGoChecker;
+import com.ft.platform.dropwizard.GoodToGoBundle;
 import com.sun.jersey.api.client.Client;
 
 import io.dropwizard.Application;
@@ -45,6 +47,7 @@ public class MethodeStoryPackageMapperApplication extends Application<MethodeSto
     @Override
     public void initialize(Bootstrap<MethodeStoryPackageMapperConfiguration> bootstrap) {
         bootstrap.addBundle(new AdvancedHealthCheckBundle());
+        bootstrap.addBundle(new GoodToGoBundle(new DefaultGoodToGoChecker()));
     }
 
     @Override
@@ -57,18 +60,19 @@ public class MethodeStoryPackageMapperApplication extends Application<MethodeSto
 
         EomFileStoryPackageMapper eomStoryPackageMapper = new EomFileStoryPackageMapper();
         ConsumerConfiguration consumerConfig = configuration.getConsumerConfiguration();
+        StoryPackageValidator storyPackageValidator = new StoryPackageValidator();
 
         MessageProducingStoryPackageMapper msgProducingStoryPackageMapper = new MessageProducingStoryPackageMapper(
                 getMessageBuilder(configuration, environment),
                 configureMessageProducer(configuration.getProducerConfiguration(), environment), eomStoryPackageMapper);
 
         MessageListener listener = new NativeCmsPublicationEventsListener(msgProducingStoryPackageMapper,
-                environment.getObjectMapper(), consumerConfig.getSystemCode());
+                environment.getObjectMapper(), storyPackageValidator, consumerConfig.getSystemCode());
 
         registerListener(environment, listener, consumerConfig, getConsumerClient(environment, consumerConfig));
 
-        environment.jersey().register(new MapResource(eomStoryPackageMapper));
-        environment.jersey().register(new IngestResource(msgProducingStoryPackageMapper));
+        environment.jersey().register(new MethodeStoryPackageResource(msgProducingStoryPackageMapper,
+                eomStoryPackageMapper, storyPackageValidator));
         environment.jersey().register(new RuntimeExceptionMapper());
 
         LOGGER.info("running with configuration: {}", configuration);
@@ -84,7 +88,8 @@ public class MethodeStoryPackageMapperApplication extends Application<MethodeSto
         jerseyConfig.setGzipEnabled(false);
         jerseyConfig.setGzipEnabledForRequests(false);
 
-        return ResilientClientBuilder.in(environment).using(jerseyConfig).usingDNS().named("consumer-client").build();
+        return ResilientClientBuilder.in(environment).using(jerseyConfig).usingDNS()
+                .named("story-package-consumer-client").build();
     }
 
     private MessageProducer configureMessageProducer(ProducerConfiguration producerConfiguration, Environment environment) {
@@ -93,7 +98,7 @@ public class MethodeStoryPackageMapperApplication extends Application<MethodeSto
         jerseyConfig.setGzipEnabledForRequests(false);
 
         Client producerClient = ResilientClientBuilder.in(environment).using(jerseyConfig).usingDNS()
-                .named("producer-client").build();
+                .named("story-package-producer-client").build();
 
         final QueueProxyProducer.BuildNeeded queueProxyBuilder = QueueProxyProducer.builder()
                 .withJerseyClient(producerClient)
