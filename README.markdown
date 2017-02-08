@@ -58,13 +58,9 @@ An example of expected message body is provided below.
 
 ## Build and Deployment
 
-### Jenkins Job
+### DockerHub
 
-[Docker image for COCO]
-
-### Run Book
-
-// TODO
+https://hub.docker.com/r/coco/methode-story-package-mapper/
 
 ## Observations
 
