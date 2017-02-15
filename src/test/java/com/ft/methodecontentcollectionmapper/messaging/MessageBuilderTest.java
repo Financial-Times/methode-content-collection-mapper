@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -119,5 +120,19 @@ public class MessageBuilderTest {
       URI expectedContentUri = URI.create(contentUriPrefix + "content-package/" + UUID.toString());
       Map<String, Object> msgContent = objectMapper.reader(Map.class).readValue(msg.getMessageBody());
       assertThat(msgContent.get("contentUri"), equalTo(expectedContentUri.toString()));
+    }
+
+    @Test
+    public void thatContentCollectionTypeIsIgnoredInResponseMessage() throws IOException {
+      ObjectMapper objectMapper = new ObjectMapper();
+      messageBuilder = new MessageBuilder(contentUriPrefix, SYSTEM_ID, objectMapper);
+
+      ContentCollection list = new ContentCollection.Builder().withUuid(UUID.toString()).withLastModified(new Date())
+          .withPublishReference(PUBLISH_REFERENCE).withType(ContentCollectionType.STORY_PACKAGE_TYPE).build();
+
+      Message msg = messageBuilder.buildMessage(list);
+
+      Map<String, Object> msgContent = objectMapper.reader(Map.class).readValue(msg.getMessageBody());
+      assertThat(((LinkedHashMap)msgContent.get("payload")).get("type"), equalTo(null));
     }
 }

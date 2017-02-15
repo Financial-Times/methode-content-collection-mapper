@@ -14,13 +14,12 @@ public class ContentCollection {
     private Date lastModified;
     private String publishReference;
 
-    @JsonIgnore
     private ContentCollectionType type;
 
     private ContentCollection(@JsonProperty("uuid") String uuid, @JsonProperty("items") List<Item> items,
             @JsonProperty("publishReference") String publishReference,
             @JsonProperty("lastModified") Date lastModified,
-            ContentCollectionType type) {
+            @JsonProperty("type") ContentCollectionType type) {
         this.uuid = uuid;
         this.items = items;
         this.publishReference = publishReference;
