@@ -35,7 +35,7 @@ producer:
     technicalSummary: Tests that kafka-proxy is reachable and the CmsPublicationEvents topic exists
     panicGuideUrl: https://dewey.ft.com/kafka-proxy.html
 
-contentUriPrefix: http://methode-story-package-mapper.svc.ft.com/story-package
+contentUriPrefix: http://methode-content-collection-mapper.svc.ft.com/content-collection/story-package
 
 server:
   applicationConnectors:
