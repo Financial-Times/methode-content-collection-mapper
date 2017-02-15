@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.github.Financial-Times</groupId>
-	<artifactId>methode-story-package-mapper</artifactId>
+	<artifactId>methode-content-collection-mapper</artifactId>
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
@@ -211,7 +211,7 @@
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<mainClass>
-										com.ft.methodestorypackagemapper.MethodeStoryPackageMapperApplication
+										com.ft.methodecontentcollectionmapper.MethodeContentCollectionMapperApplication
 									</mainClass>
 								</transformer>
 							</transformers>
