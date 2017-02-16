@@ -3,7 +3,6 @@ package com.ft.methodecontentcollectionmapper;
 import java.util.EnumSet;
 
 import javax.servlet.DispatcherType;
-import javax.ws.rs.core.UriBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,7 +97,7 @@ public class MethodeContentCollectionMapperApplication extends Application<Metho
         jerseyConfig.setGzipEnabledForRequests(false);
 
         Client producerClient = ResilientClientBuilder.in(environment).using(jerseyConfig).usingDNS()
-                .named("content-collection-consumer-client").build();
+                .named("content-collection-produ-client").build();
 
         final QueueProxyProducer.BuildNeeded queueProxyBuilder = QueueProxyProducer.builder()
                 .withJerseyClient(producerClient)
