@@ -37,12 +37,8 @@ public class MessageBuilder {
     }
 
     public Message buildMessage(ContentCollection contentCollection) {
-        String specificContentUriPrefix = contentUriPrefix;
-        if (contentCollection.getType() == ContentCollectionType.STORY_PACKAGE_TYPE) {
-          specificContentUriPrefix += "story-package";
-        } else if (contentCollection.getType() == ContentCollectionType.CONTENT_PACKAGE_TYPE) {
-          specificContentUriPrefix += "content-package";
-        }
+        String specificContentUriPrefix = contentUriPrefix +
+            contentCollection.getType().getCorrespondingContentUriSuffix();
         UriBuilder contentUriBuilder = UriBuilder.fromUri(specificContentUriPrefix).path("{uuid}");
 
         MessageBody msgBody = new MessageBody(contentCollection, contentUriBuilder.build(contentCollection.getUuid()).toString(),
