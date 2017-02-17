@@ -23,7 +23,7 @@ public enum ContentCollectionType {
 
   public static ContentCollectionType fromWebType(String webType, String uuid)
       throws XPathExpressionException {
-    if (webTypeToContentCollectionTypeMap.get(webType) != null) {
+    if (webTypeToContentCollectionTypeMap.get(webType) == null) {
       throw new UnsupportedTypeException(uuid, webType, formattedWebTypes());
     }
 
