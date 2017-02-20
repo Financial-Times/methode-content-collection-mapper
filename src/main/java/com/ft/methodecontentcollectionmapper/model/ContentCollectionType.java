@@ -5,20 +5,22 @@ import com.google.common.collect.ImmutableMap;
 import javax.xml.xpath.XPathExpressionException;
 
 public enum ContentCollectionType {
-  STORY_PACKAGE_TYPE, CONTENT_PACKAGE_TYPE;
+  STORY_PACKAGE_TYPE("story-package"),
+  CONTENT_PACKAGE_TYPE("content-package");
 
   private static ImmutableMap<String, ContentCollectionType> webTypeToContentCollectionTypeMap = ImmutableMap.<String, ContentCollectionType>builder()
       .put("editorsChoice", ContentCollectionType.STORY_PACKAGE_TYPE)
       .put("content-package", ContentCollectionType.CONTENT_PACKAGE_TYPE)
       .build();
 
-  private static ImmutableMap<ContentCollectionType, String> contentCollectionTypeToContentUriSuffixMap = ImmutableMap.<ContentCollectionType, String>builder()
-      .put(ContentCollectionType.STORY_PACKAGE_TYPE, "story-package")
-      .put(ContentCollectionType.CONTENT_PACKAGE_TYPE, "content-package")
-      .build();
+  private String contentUriSuffix;
 
-  public String getCorrespondingContentUriSuffix() {
-    return contentCollectionTypeToContentUriSuffixMap.get(this);
+  private ContentCollectionType(String contentUriSuffix) {
+    this.contentUriSuffix = contentUriSuffix;
+  }
+
+  public String getContentUriSuffix() {
+    return contentUriSuffix;
   }
 
   public static ContentCollectionType fromWebType(String webType, String uuid)

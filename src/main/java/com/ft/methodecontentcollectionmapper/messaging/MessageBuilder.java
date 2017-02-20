@@ -38,7 +38,7 @@ public class MessageBuilder {
 
     public Message buildMessage(ContentCollection contentCollection) {
         String specificContentUriPrefix = contentUriPrefix +
-            contentCollection.getType().getCorrespondingContentUriSuffix();
+            contentCollection.getType().getContentUriSuffix();
         UriBuilder contentUriBuilder = UriBuilder.fromUri(specificContentUriPrefix).path("{uuid}");
 
         MessageBody msgBody = new MessageBody(contentCollection, contentUriBuilder.build(contentCollection.getUuid()).toString(),
