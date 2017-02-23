@@ -61,34 +61,34 @@ An example of expected mapper body response for a story package is provided belo
 ```
 
 An example of expected mapper body response for a content package is provided below:
-```json 
-   {
-    "payload": {
-	"uuid": "a403a332-de48-11e6-86ac-f253db7791c6",
-	"items": [{
-	    "uuid": "d4986a58-de3b-11e6-86ac-f253db7791c6"
+```json
+    {
+	"payload": {
+		"uuid": "45163790-eec9-11e6-abbc-ee7d9c5b3b90",
+		"items": [{
+			"uuid": "d4986a58-de3b-11e6-86ac-f253db7791c6"
+		},
+		{
+			"uuid": "d9b4c4c6-dcc6-11e6-86ac-f253db7791c6"
+		},
+		{
+			"uuid": "d8509dc8-d7ec-11e6-944b-e7eb37a6aa8e"
+		},
+		{
+			"uuid": "404040aa-ce97-11e6-864f-20dcb35cede2"
+		},
+		{ 			"
+			uuid": "834a2bc2-bd67-11e6-8b45-b8b81dd5d080"
+		}],
+		"publishReference": "tdi23377744",
+		"lastModified": 1485876801687
 	},
-	{
-	    "uuid": "d9b4c4c6-dcc6-11e6-86ac-f253db7791c6"
-	},
-	{
-	    "uuid": "d8509dc8-d7ec-11e6-944b-e7eb37a6aa8e"
-	},
-	{
-	    "uuid": "404040aa-ce97-11e6-864f-20dcb35cede2"
-	},
-	{           "
-	    uuid": "834a2bc2-bd67-11e6-8b45-b8b81dd5d080"
-	}],
-	"publishReference": "tdi23377744",
-	"lastModified": 1485876801687
-    },
-    "contentUri": "http://methode-content-collection-mapper.svc.ft.com/content-collection/content-package/a403a332-de48-11e6-86ac-f253db7791c6",
-    "lastModified": "2017-01-31T15:33:21.687Z",
-    "uuid": "a403a332-de48-11e6-86ac-f253db7791c6"
+	"contentUri": "http://methode-content-collection-mapper.svc.ft.com/content-collection/content-package/45163790-eec9-11e6-abbc-ee7d9c5b3b90",
+	"lastModified": "2017-01-31T15:33:21.687Z",
+	"uuid": "45163790-eec9-11e6-abbc-ee7d9c5b3b90"
 }
 ```
-Note: the difference is in the contentUri, based on which each one is handled differently in UP stack onwards.
+Note: the only difference is in the contentUri, based on which each one is handled differently in UP stack onwards.
 
 ## Build and Deployment
 
