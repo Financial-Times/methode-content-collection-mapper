@@ -81,7 +81,7 @@ An example of expected mapper body response for a content package is provided be
 			uuid": "834a2bc2-bd67-11e6-8b45-b8b81dd5d080"
 		}],
 		"publishReference": "tdi23377744",
-		"lastModified": 1485876801687
+		"lastModified": "2017-01-31T15:33:21.687Z"
 	},
 	"contentUri": "http://methode-content-collection-mapper.svc.ft.com/content-collection/content-package/45163790-eec9-11e6-abbc-ee7d9c5b3b90",
 	"lastModified": "2017-01-31T15:33:21.687Z",
