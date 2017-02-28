@@ -52,7 +52,7 @@ An example of expected mapper body response for a story package is provided belo
 			uuid": "834a2bc2-bd67-11e6-8b45-b8b81dd5d080"
 		}],
 		"publishReference": "tdi23377744",
-		"lastModified": 1485876801687
+		"lastModified": "2017-01-31T15:33:21.687Z"
 	},
 	"contentUri": "http://methode-content-collection-mapper.svc.ft.com/content-collection/story-package/a403a332-de48-11e6-86ac-f253db7791c6",
 	"lastModified": "2017-01-31T15:33:21.687Z",
