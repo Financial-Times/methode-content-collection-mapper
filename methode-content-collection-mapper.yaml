@@ -4,7 +4,6 @@ consumer:
     timeout: 25 seconds
   messageConsumer:
     queueProxyHost: http://localhost:8080
-    queue: kafka
     topicName: NativeCmsPublicationEvents
     groupName: MethodeContentCollectionMapper
     backoffPeriod: 10000
@@ -25,8 +24,6 @@ producer:
     timeout: 25 seconds
   messageProducer:
     proxyHostAndPort: localhost:8080
-    additionalHeaders:
-      Host: kafka
     topicName: CmsPublicationEvents
   healthCheck:
     name: Can connect producer to kafka-proxy
