@@ -1,6 +1,8 @@
 package com.ft.methodecontentcollectionmapper.mapping;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import com.ft.methodecontentcollectionmapper.exception.UnsupportedTypeException;
@@ -69,6 +71,17 @@ public class EomFileToContentCollectionMapperTest {
         .mapPackage(eomFileContentCollection, TRANSACTION_ID, LAST_MODIFIED);
 
     assertThat(actualContentPackage.getItems().size(), equalTo(0));
+  }
+
+  @Test
+  public void shouldNotThrowExceptionIfItemListIsNull() throws Exception {
+    mockContentCollection(CONTENT_COLLECTION_UUID, STORY_PACKAGE_TYPE, null);
+    final ContentCollection actualStoryPackage = eomContentCollectionMapper
+        .mapPackage(eomFileContentCollection, TRANSACTION_ID, LAST_MODIFIED);
+
+    assertThat(actualStoryPackage, is(notNullValue()));
+    assertThat(actualStoryPackage.getItems(), is(notNullValue()));
+    assertThat(actualStoryPackage.getItems().size(), is(0));
   }
 
   @Test

@@ -8,10 +8,10 @@ import com.ft.methodecontentcollectionmapper.model.EomLinkedObject;
 import com.ft.methodecontentcollectionmapper.model.Item;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -44,17 +44,16 @@ public class EomFileToContentCollectionMapper {
     }
   }
 
-  private List<Item> extractItems(List<EomLinkedObject> linkedObjects)
-      throws SAXException, IOException, ParserConfigurationException, XPathExpressionException {
-    List<Item> listItems = new ArrayList<>();
-
-    for (EomLinkedObject linkedObject : linkedObjects) {
-      UUID uuid = UUID.fromString(linkedObject.getUuid());
-      Item item = new Item.Builder().withUuid(uuid.toString()).build();
-      listItems.add(item);
+  private List<Item> extractItems(final List<EomLinkedObject> linkedObjects) {
+    if (linkedObjects == null) {
+      return Collections.emptyList();
     }
 
-    return listItems;
+    return
+        linkedObjects
+            .stream()
+            .map(linkedObject -> new Item.Builder().withUuid(linkedObject.getUuid()).build())
+            .collect(Collectors.toList());
   }
 
   private DocumentBuilder getDocumentBuilder() throws ParserConfigurationException {
