@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/Financial-Times/methode-content-collection-mapper.svg?style=svg)](https://circleci.com/gh/Financial-Times/methode-content-collection-mapper) [![Coverage Status](https://coveralls.io/repos/github/Financial-Times/methode-content-collection-mapper/badge.svg?branch=master)](https://coveralls.io/github/Financial-Times/methode-content-collection-mapper?branch=master)
+
 # Methode Content Collection Mapper
 
 Methode Content Collection Mapper (MCCM) is responsible for listening for new content collecion publishes (i.e. content package or story package, the later is also known as editors choice component), and then transforming it to a structure amenable to processing by UP and putting this structure back on the kafka queue.
