@@ -57,9 +57,13 @@ public class EomLinkedObject {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        EomLinkedObject that = (EomLinkedObject) o;
-        return Objects.equal(getUuid(), that.getUuid()) && Objects.equal(getType(), that.getType()) && Objects.equal(getAttributes(), that.getAttributes())
-                && Objects.equal(getWorkflowStatus(), that.getWorkflowStatus()) && Objects.equal(getSystemAttributes(), that.getSystemAttributes());
+        final EomLinkedObject that = (EomLinkedObject) o;
+        return
+            Objects.equal(getUuid(), that.getUuid()) &&
+            Objects.equal(getType(), that.getType()) &&
+            Objects.equal(getAttributes(), that.getAttributes()) &&
+            Objects.equal(getWorkflowStatus(), that.getWorkflowStatus()) &&
+            Objects.equal(getSystemAttributes(), that.getSystemAttributes());
     }
 
     @Override

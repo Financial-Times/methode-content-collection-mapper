@@ -1,5 +1,7 @@
 package com.ft.methodecontentcollectionmapper.model;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -63,4 +65,48 @@ public class EomFile {
     public List<EomLinkedObject> getLinkedObjects() {
         return linkedObjects;
     }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+            .add("uuid", uuid)
+            .add("type", type)
+            .add("value", value)
+            .add("attributes", attributes)
+            .add("workflowStatus", workflowStatus)
+            .add("systemAttributes", systemAttributes)
+            .add("usageTickets", usageTickets)
+            .add("linkedObjects", linkedObjects)
+            .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final EomFile eomFile = (EomFile) o;
+        return
+            Objects.equal(getUuid(), eomFile.getUuid()) &&
+            Objects.equal(getType(), eomFile.getType()) &&
+            Objects.equal(getValue(), eomFile.getValue()) &&
+            Objects.equal(getAttributes(), eomFile.getAttributes()) &&
+            Objects.equal(getWorkflowStatus(), eomFile.getWorkflowStatus()) &&
+            Objects.equal(getSystemAttributes(), eomFile.getSystemAttributes()) &&
+            Objects.equal(getUsageTickets(), eomFile.getUsageTickets()) &&
+            Objects.equal(getLinkedObjects(), eomFile.getLinkedObjects());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects
+            .hashCode(getUuid(), getType(), getValue(), getAttributes(), getWorkflowStatus(),
+                getSystemAttributes(), getUsageTickets(), getLinkedObjects());
+    }
+
+
+
 }
