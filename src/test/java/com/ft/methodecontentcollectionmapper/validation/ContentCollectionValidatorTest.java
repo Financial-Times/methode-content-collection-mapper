@@ -27,73 +27,64 @@ public class ContentCollectionValidatorTest {
 
     @Test(expected = ValidationException.class)
     public void thatNullMainUuidThrowsException() {
-        final EomFile eomFile = new EomFile(null, null, null, null, null, null, null, null);
+        final EomFile eomFile = new EomFile.Builder().build();
         contentCollectionValidator.validate(eomFile);
     }
 
     @Test(expected = ValidationException.class)
     public void thatInvalidMainUuidThrowsException() {
-        final EomFile eomFile = new EomFile("abc", null, null, null, null, null, null, null);
+        final EomFile eomFile = new EomFile.Builder().withUuid("abc").build();
         contentCollectionValidator.validate(eomFile);
     }
 
     @Test(expected = ValidationException.class)
     public void thatNullLinkedUuidThrowsException() throws Exception {
         final EomFile eomFile =
-            new EomFile(
-                UUID.randomUUID().toString(),
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                Arrays.asList(new EomLinkedObject(null, null, null, null, null)));
-
+            new EomFile.Builder()
+                .withUuid(UUID.randomUUID().toString())
+                .withLinkedObjects(new EomLinkedObject.Builder().build())
+                .build();
         contentCollectionValidator.validate(eomFile);
     }
 
     @Test(expected = ValidationException.class)
     public void thatInvalidLinkedUuidThrowsException() throws Exception {
         final EomFile eomFile =
-            new EomFile(
-                UUID.randomUUID().toString(),
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                Arrays.asList(new EomLinkedObject("abc", null, null, null, null)));
-
+            new EomFile.Builder()
+                .withUuid(UUID.randomUUID().toString())
+                .withLinkedObjects(new EomLinkedObject.Builder().withUuid("abc").build())
+                .build();
         contentCollectionValidator.validate(eomFile);
     }
 
     @Test(expected = UnsupportedTypeException.class)
     public void thatNullContentTypeThrowsException() {
-        final EomFile eomFile = new EomFile(UUID.randomUUID().toString(), null, null, null, null, null, null, null);
+        final EomFile eomFile =
+            new EomFile.Builder()
+                .withUuid(UUID.randomUUID().toString())
+                .build();
         contentCollectionValidator.validate(eomFile);
     }
 
     @Test(expected = UnsupportedTypeException.class)
     public void thatInvalidContentTypeThrowsException() {
-        final EomFile eomFile = new EomFile(UUID.randomUUID().toString(), "typeABC", null, null, null, null, null, null);
+        final EomFile eomFile =
+            new EomFile.Builder()
+                .withUuid(UUID.randomUUID().toString())
+                .withType("typeABC")
+                .build();
         contentCollectionValidator.validate(eomFile);
     }
 
     @Test
     public void thatNoExceptionIsThrownWhenValid() throws Exception {
         final EomFile eomFile =
-            new EomFile(
-                UUID.randomUUID().toString(),
-                "EOM::WebContainer",
-                null,
-                null,
-                null,
-                null,
-                null,
-                Arrays.asList(new EomLinkedObject(UUID.randomUUID().toString(), null, null, null, null)));
-
+            new EomFile.Builder()
+                .withUuid(UUID.randomUUID().toString())
+                .withType("EOM::WebContainer")
+                .withLinkedObjects(new EomLinkedObject.Builder().withUuid(UUID.randomUUID().toString()).build())
+                .build();
         contentCollectionValidator.validate(eomFile);
     }
+
 }

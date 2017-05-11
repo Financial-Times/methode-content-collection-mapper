@@ -104,7 +104,11 @@ public class NativeCmsPublicationEventsListenerTest {
         verify(msgProducingContentCollectionMapper, never()).mapPackage(Matchers.any(), anyString(), Matchers.any());
     }
 
-    private EomFile buildContentPackageEomFile(String uuid, String type) {
-        return new EomFile(uuid, type, null, null, "Stories/Write", null, null, null);
+    private EomFile buildContentPackageEomFile(final String uuid, final String type) {
+        return new EomFile.Builder()
+            .withUuid(uuid)
+            .withType(type)
+            .withWorkflowStatus("Stories/Write")
+            .build();
     }
 }
