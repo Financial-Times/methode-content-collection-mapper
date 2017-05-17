@@ -1,7 +1,6 @@
 package com.ft.methodecontentcollectionmapper.validation;
 
 import com.ft.methodecontentcollectionmapper.model.EomLinkedObject;
-import java.util.Arrays;
 import java.util.UUID;
 
 import javax.validation.ValidationException;
