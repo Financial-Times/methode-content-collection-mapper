@@ -1,7 +1,7 @@
 package com.ft.methodecontentcollectionmapper.validation;
 
 import com.ft.methodecontentcollectionmapper.model.EomLinkedObject;
-import com.ft.uuidutils.UuidValidation;
+import com.ft.uuidutils.UUIDValidation;
 import java.util.List;
 
 import javax.validation.ValidationException;
@@ -21,9 +21,9 @@ public class ContentCollectionValidator {
     private void validateUuids(final String mainUuid,
                                final List<EomLinkedObject> linkedObjects) throws ValidationException {
         try {
-            UuidValidation.of(mainUuid);
+            UUIDValidation.of(mainUuid);
             if (linkedObjects != null) {
-                linkedObjects.forEach(linkedObject -> UuidValidation.of(linkedObject.getUuid()));
+                linkedObjects.forEach(linkedObject -> UUIDValidation.of(linkedObject.getUuid()));
             }
         } catch (final IllegalArgumentException e) {
             throw new ValidationException(e.getMessage());

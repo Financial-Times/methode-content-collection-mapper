@@ -19,7 +19,7 @@
 		<guava.version>18.0</guava.version>
 		<jaxrs-build-info-resource.version>1.1.1</jaxrs-build-info-resource.version>
 		<jaxrs.transaction-id-handling.version>2.6.1</jaxrs.transaction-id-handling.version>
-		<uuid-utils.version>1.0.1</uuid-utils.version>
+		<uuid-utils.version>1.0.2</uuid-utils.version>
 		<jaxrs.errorhandling.version>1.1.4</jaxrs.errorhandling.version>
 		<jersey-version>1.18.1</jersey-version>
 		<resilientclient.version>0.4.0</resilientclient.version>
