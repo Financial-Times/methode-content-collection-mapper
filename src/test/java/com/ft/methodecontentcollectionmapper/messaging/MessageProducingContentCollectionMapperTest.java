@@ -65,8 +65,11 @@ public class MessageProducingContentCollectionMapperTest {
     }
 
     private EomFile buildContentCollectionEomFile() {
-        return new EomFile(UUID.randomUUID().toString(), "EOM::WebContainer", null, null, "Stories/Write", null, null,
-                null);
+        return new EomFile.Builder()
+            .withUuid(UUID.randomUUID().toString())
+            .withType("EOM::WebContainer")
+            .withWorkflowStatus("Stories/Write")
+            .build();
     }
 
 }
