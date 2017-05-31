@@ -1,6 +1,8 @@
 package com.ft.methodecontentcollectionmapper.mapping;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import com.ft.methodecontentcollectionmapper.exception.UnsupportedTypeException;
@@ -49,45 +51,82 @@ public class EomFileToContentCollectionMapperTest {
 
   @Test(expected = UnsupportedTypeException.class)
   public void shouldThrowUnsupportedTypeExceptionForNotContentCollectionTypes() {
-    mockContentCollection(CONTENT_COLLECTION_UUID, "", null);
+    mockContentCollection(CONTENT_COLLECTION_UUID, "");
     eomContentCollectionMapper.mapPackage(eomFileContentCollection, TRANSACTION_ID, LAST_MODIFIED);
   }
 
   @Test
   public void shouldReturnStoryPackageWithNoItems() {
-    mockContentCollection(CONTENT_COLLECTION_UUID, STORY_PACKAGE_TYPE, new ArrayList<>());
-    ContentCollection actualStoryPackage = eomContentCollectionMapper
-        .mapPackage(eomFileContentCollection, TRANSACTION_ID, LAST_MODIFIED);
+    mockContentCollection(CONTENT_COLLECTION_UUID, STORY_PACKAGE_TYPE);
+    final ContentCollection actualStoryPackage =
+        eomContentCollectionMapper
+            .mapPackage(
+                eomFileContentCollection,
+                TRANSACTION_ID,
+                LAST_MODIFIED);
 
     assertThat(actualStoryPackage.getItems().size(), equalTo(0));
   }
 
   @Test
   public void shouldReturnContentPackageWithNoItems() {
-    mockContentCollection(CONTENT_COLLECTION_UUID, CONTENT_PACKAGE_TYPE, new ArrayList<>());
-    ContentCollection actualContentPackage = eomContentCollectionMapper
-        .mapPackage(eomFileContentCollection, TRANSACTION_ID, LAST_MODIFIED);
+    mockContentCollection(CONTENT_COLLECTION_UUID, CONTENT_PACKAGE_TYPE);
+    final ContentCollection actualContentPackage =
+        eomContentCollectionMapper
+            .mapPackage(
+                eomFileContentCollection,
+                TRANSACTION_ID,
+                LAST_MODIFIED);
 
     assertThat(actualContentPackage.getItems().size(), equalTo(0));
   }
 
   @Test
-  public void shouldReturnAllItems() {
-    List<EomLinkedObject> items = new ArrayList<>();
-    items.add(new EomLinkedObject(ITEM_UUID_1, "Story", null, null, null));
-    items.add(new EomLinkedObject(ITEM_UUID_2, "Story", null, null, null));
+  public void shouldNotThrowExceptionIfItemListIsNull() throws Exception {
+    mockContentCollection(CONTENT_COLLECTION_UUID, STORY_PACKAGE_TYPE, (EomLinkedObject[]) null);
+    final ContentCollection actualStoryPackage =
+        eomContentCollectionMapper
+            .mapPackage(
+                eomFileContentCollection,
+                TRANSACTION_ID,
+                LAST_MODIFIED);
 
-    mockContentCollection(CONTENT_COLLECTION_UUID, STORY_PACKAGE_TYPE, items);
-    ContentCollection actualStoryPackage = eomContentCollectionMapper
-        .mapPackage(eomFileContentCollection, TRANSACTION_ID, LAST_MODIFIED);
+    assertThat(actualStoryPackage, is(notNullValue()));
+    assertThat(actualStoryPackage.getItems(), is(notNullValue()));
+    assertThat(actualStoryPackage.getItems().size(), is(0));
+  }
+
+  @Test
+  public void shouldReturnAllItems() {
+    mockContentCollection(
+        CONTENT_COLLECTION_UUID,
+        STORY_PACKAGE_TYPE,
+        new EomLinkedObject.Builder().withUuid(ITEM_UUID_1).withType("Story").build(),
+        new EomLinkedObject.Builder().withUuid(ITEM_UUID_2).withType("Story").build());
+
+    final ContentCollection actualStoryPackage =
+        eomContentCollectionMapper
+            .mapPackage(
+                eomFileContentCollection,
+                TRANSACTION_ID,
+                LAST_MODIFIED);
 
     assertThat(actualStoryPackage.getItems().size(), equalTo(2));
   }
 
-  private void mockContentCollection(String uuid, String webType,
-      List<EomLinkedObject> contentCollectionItems) {
-    eomFileContentCollection = new EomFile(uuid, EOM_WEB_CONTAINER, null,
-        String.format(ATTRIBUTES_TEMPLATE, webType), "", SYSTEM_ATTRIBUTES, null,
-        contentCollectionItems);
+  private void mockContentCollection(
+      final String uuid,
+      final String webType,
+      final EomLinkedObject... contentCollectionItems) {
+    eomFileContentCollection =
+        new EomFile.Builder()
+            .withUuid(uuid)
+            .withType(EOM_WEB_CONTAINER)
+            .withAttributes(String.format(ATTRIBUTES_TEMPLATE, webType))
+            .withWorkflowStatus("")
+            .withSystemAttributes(SYSTEM_ATTRIBUTES)
+            .withUsageTickets(null)
+            .withLinkedObjects(contentCollectionItems)
+            .build();
   }
 }
