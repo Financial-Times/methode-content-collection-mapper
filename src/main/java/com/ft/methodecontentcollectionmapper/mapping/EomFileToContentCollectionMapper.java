@@ -73,8 +73,9 @@ public class EomFileToContentCollectionMapper {
       for (final EomLinkedObject linkedObject : linkedObjects) {
         if (isContentPlaceholder(linkedObject)) {
           items.add(resolveToBlogItem(linkedObject, tid));
+        } else {
+          items.add(new Item.Builder().withUuid(linkedObject.getUuid()).build());
         }
-        items.add(new Item.Builder().withUuid(linkedObject.getUuid()).build());
       }
       return items;
   }
