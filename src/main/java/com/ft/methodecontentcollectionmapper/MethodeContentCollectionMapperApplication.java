@@ -4,6 +4,8 @@ import java.util.EnumSet;
 
 import javax.servlet.DispatcherType;
 
+import com.ft.methodecontentcollectionmapper.client.DocumentStoreApiClient;
+import com.ft.methodecontentcollectionmapper.mapping.BlogUuidResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +59,15 @@ public class MethodeContentCollectionMapperApplication extends Application<Metho
         environment.jersey().register(new VersionResource());
         environment.jersey().register(new BuildInfoResource());
 
-        EomFileToContentCollectionMapper eomContentCollectionMapper = new EomFileToContentCollectionMapper();
+        DocumentStoreApiClient documentStoreApiClient = new DocumentStoreApiClient(configuration.getDocumentStoreApiConfiguration(), environment);
+        BlogUuidResolver blogUuidResolver = new BlogUuidResolver(
+                environment.metrics(),
+                documentStoreApiClient,
+                configuration.getValidationConfiguration().getAuthorityPrefix(),
+                configuration.getValidationConfiguration().getBrandIdMappings()
+        );
+
+        EomFileToContentCollectionMapper eomContentCollectionMapper = new EomFileToContentCollectionMapper(blogUuidResolver);
         ConsumerConfiguration consumerConfig = configuration.getConsumerConfiguration();
         ContentCollectionValidator contentCollectionValidator = new ContentCollectionValidator();
 
