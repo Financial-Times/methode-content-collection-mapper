@@ -19,5 +19,6 @@ CMD exec java $JAVA_OPTS \
      -Ddw.server.adminConnectors[0].port=8081 \
      -Ddw.consumer.messageConsumer.queueProxyHost=http://$VULCAN_HOST \
      -Ddw.producer.messageProducer.proxyHostAndPort=$VULCAN_HOST \
+     -Ddw.documentStoreApi.endpointConfiguration.primaryNodes=$VULCAN_HOST \
      -Ddw.logging.appenders[0].logFormat="%-5p [%d{ISO8601, GMT}] %c: %X{transaction_id} %replace(%m%n[%thread]%xEx){'\n', '|'}%nopex%n" \
      -jar methode-content-collection-mapper.jar server config.yaml
