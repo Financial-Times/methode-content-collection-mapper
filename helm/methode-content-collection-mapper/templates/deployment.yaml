@@ -1,5 +1,3 @@
-##this is an example deployment.yaml that should be customized in order to meet the configuration for app k8s deployment
-
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -27,7 +25,7 @@ spec:
         env: 
         - name: JAVA_OPTS
           value: "{{ .Values.env.java.opts }}"
-        - name: KAFKA_PROXY_URL
+        - name: VULCAN_HOST
           valueFrom:
             configMapKeyRef:
               name: global-config

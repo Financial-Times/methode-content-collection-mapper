@@ -7,12 +7,10 @@ service:
 replicaCount: 2
 image:
   repository: coco/methode-content-collection-mapper
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
 env:
   java:
     opts: "-Xms128m -Xmx128m -XX:+UseG1GC -server"
-#resources:
-#  limits:
-#    memory: 256Mi
-
-
+resources:
+  limits:
+    memory: 320Mi
