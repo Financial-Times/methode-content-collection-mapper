@@ -1,34 +1,32 @@
 package com.ft.methodecontentcollectionmapper.mapping;
 
+import com.ft.methodecontentcollectionmapper.exception.MethodeMissingFieldException;
 import com.ft.methodecontentcollectionmapper.exception.TransformationException;
 import com.ft.methodecontentcollectionmapper.model.ContentCollection;
 import com.ft.methodecontentcollectionmapper.model.ContentCollectionType;
 import com.ft.methodecontentcollectionmapper.model.EomFile;
 import com.ft.methodecontentcollectionmapper.model.EomLinkedObject;
 import com.ft.methodecontentcollectionmapper.model.Item;
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-
-import com.ft.methodecontentcollectionmapper.exception.MethodeMissingFieldException;
-import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableSet;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class EomFileToContentCollectionMapper {
 
@@ -65,7 +63,7 @@ public class EomFileToContentCollectionMapper {
     }
   }
 
-  private List<Item> extractItems(final List<EomLinkedObject> linkedObjects, final String tid) throws  XPathExpressionException, ParserConfigurationException, SAXException, IOException {
+  private List<Item> extractItems(final List<EomLinkedObject> linkedObjects, final String tid) throws XPathExpressionException, ParserConfigurationException, SAXException, IOException {
       if (linkedObjects == null) {
         return Collections.emptyList();
       }
