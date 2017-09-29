@@ -6,6 +6,7 @@ import com.ft.methodecontentcollectionmapper.exception.UuidResolverException;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientHandler;
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.filter.ClientFilter;
 import com.sun.jersey.client.apache4.ApacheHttpClient4Handler;
 import io.dropwizard.setup.Environment;
@@ -76,14 +77,20 @@ public class DocumentStoreApiClient extends UppServiceClient {
         }
 
         LOG.info("Call to Document Store API: {}", queryUri);
-        final ClientResponse response = jerseyClient.resource(queryUri)
-                .header("Host", hostHeader)
-                .header(TRANSACTION_ID_HEADER, transactionId)
-                .get(ClientResponse.class);
+        WebResource webResource = jerseyClient.resource(queryUri);
+        WebResource.Builder builder = webResource.getRequestBuilder();
+        builder = builder.header(TRANSACTION_ID_HEADER, transactionId);
+        if (!hostHeader.isEmpty()) {
+            builder = builder.header("Host", hostHeader);
+        }
+        final ClientResponse response = builder.get(ClientResponse.class);
 
         return processResponse(response, resp -> {
             if (resp.getStatus() == HttpStatus.SC_NOT_FOUND) {
-                throw new TransientUuidResolverException("Failed to find uuid in Document Store API! QueryURI: " + queryUri, queryUri, identifierValue);
+                throw new TransientUuidResolverException(String.format("uuid not found in document-store-api status=%d queryURI=%s", resp.getStatus(), queryUri), queryUri, identifierValue);
+            }
+            if (resp.getStatus() != HttpStatus.SC_MOVED_PERMANENTLY) {
+                throw new TransientUuidResolverException(String.format("unexpected status code from document-store-api status=%d queryURI=%s", resp.getStatus(), queryUri), queryUri, identifierValue);
             }
 
             final URI redirectUrl = resp.getLocation();

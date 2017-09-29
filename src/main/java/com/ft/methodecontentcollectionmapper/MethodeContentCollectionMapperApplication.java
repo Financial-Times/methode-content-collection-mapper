@@ -5,6 +5,7 @@ import java.util.EnumSet;
 import javax.servlet.DispatcherType;
 
 import com.ft.methodecontentcollectionmapper.client.DocumentStoreApiClient;
+import com.ft.methodecontentcollectionmapper.configuration.UppServiceConfiguration;
 import com.ft.methodecontentcollectionmapper.mapping.BlogUuidResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +60,12 @@ public class MethodeContentCollectionMapperApplication extends Application<Metho
         environment.jersey().register(new VersionResource());
         environment.jersey().register(new BuildInfoResource());
 
-        DocumentStoreApiClient documentStoreApiClient = new DocumentStoreApiClient(configuration.getDocumentStoreApiConfiguration(), environment);
+        DocumentStoreApiClient documentStoreApiClient = new DocumentStoreApiClient(
+                createDocumentStoreClient(environment, configuration.getDocumentStoreApiConfiguration()),
+                configuration.getDocumentStoreApiConfiguration().getEndpointConfiguration().getHost(),
+                configuration.getDocumentStoreApiConfiguration().getEndpointConfiguration().getPort(),
+                configuration.getDocumentStoreApiConfiguration().getHostHeader()
+                );
         BlogUuidResolver blogUuidResolver = new BlogUuidResolver(
                 environment.metrics(),
                 documentStoreApiClient,
@@ -99,6 +105,14 @@ public class MethodeContentCollectionMapperApplication extends Application<Metho
 
         return ResilientClientBuilder.in(environment).using(jerseyConfig).usingDNS()
                 .named("content-collection-consumer-client").build();
+    }
+
+    private Client createDocumentStoreClient(Environment environment, UppServiceConfiguration config) {
+        JerseyClientConfiguration jerseyConfig = config.getEndpointConfiguration().getJerseyClientConfiguration();
+        jerseyConfig.setGzipEnabled(false);
+        jerseyConfig.setGzipEnabledForRequests(false);
+        return ResilientClientBuilder.in(environment).using(jerseyConfig).usingDNS()
+                .named("content-collection-document-store-api-client").build();
     }
 
     private MessageProducer configureMessageProducer(ProducerConfiguration producerConfiguration, Environment environment) {
