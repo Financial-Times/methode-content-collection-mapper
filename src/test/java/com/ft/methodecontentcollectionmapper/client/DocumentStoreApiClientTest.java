@@ -30,12 +30,13 @@ public class DocumentStoreApiClientTest {
         WebResource.Builder mockedBuilder = mock(WebResource.Builder.class);
         when(mockedResource.getRequestBuilder()).thenReturn(mockedBuilder);
         when(mockedBuilder.header(TRANSACTION_ID_HEADER, "tid_1")).thenReturn(mockedBuilder);
+        when(mockedBuilder.header("Host", "document-store-api")).thenReturn(mockedBuilder);
         ClientResponse mockedResponse = mock(ClientResponse.class);
         when(mockedBuilder.get(ClientResponse.class)).thenReturn(mockedResponse);
         doNothing().when(mockedResponse).close();
         when(mockedResponse.getStatus()).thenReturn(301);
         when(mockedResponse.getLocation()).thenReturn(URI.create("http://api.ft.com/6c6d690a-95e4-449f-9d34-7f211f4e5b1e"));
-        DocumentStoreApiClient documentStoreClient = new DocumentStoreApiClient(mockedJerseyClient, "document-store-api", 8080, "");
+        DocumentStoreApiClient documentStoreClient = new DocumentStoreApiClient(mockedJerseyClient, "document-store-api", 8080, "document-store-api");
 
         String resolvedUuid = documentStoreClient.resolveUUID("http://api.ft.com/system/FT-LABS-WP-1-2", "http://blogs.ft.com/the-world/?p=1234", "tid_1");
 
