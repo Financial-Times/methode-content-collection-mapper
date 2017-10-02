@@ -17,8 +17,8 @@ EXPOSE 8080 8081
 CMD exec java $JAVA_OPTS \
      -Ddw.server.applicationConnectors[0].port=8080 \
      -Ddw.server.adminConnectors[0].port=8081 \
-     -Ddw.consumer.messageConsumer.queueProxyHost=http://$VULCAN_HOST \
-     -Ddw.producer.messageProducer.proxyHostAndPort=$VULCAN_HOST \
-     -Ddw.documentStoreApi.endpointConfiguration.primaryNodes=$VULCAN_HOST \
+     -Ddw.consumer.messageConsumer.queueProxyHost=http://$KAFKA_PROXY_URL \
+     -Ddw.producer.messageProducer.proxyHostAndPort=$KAFKA_PROXY_URL \
+     -Ddw.documentStoreApi.endpointConfiguration.primaryNodes=$DOCUMENT_STORE_API_URL \
      -Ddw.logging.appenders[0].logFormat="%-5p [%d{ISO8601, GMT}] %c: %X{transaction_id} %replace(%m%n[%thread]%xEx){'\n', '|'}%nopex%n" \
      -jar methode-content-collection-mapper.jar server config.yaml

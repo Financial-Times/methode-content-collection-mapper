@@ -25,11 +25,13 @@ spec:
         env: 
         - name: JAVA_OPTS
           value: "{{ .Values.env.java.opts }}"
-        - name: VULCAN_HOST
+        - name: KAFKA_PROXY_URL
           valueFrom:
             configMapKeyRef:
               name: global-config
               key: kafka.proxy.url
+        - name: DOCUMENT_STORE_API_URL
+          value: {{ .Values.env.document_store_api_url }}
         ports: 
         - containerPort: 8080 
         - containerPort: 8081 

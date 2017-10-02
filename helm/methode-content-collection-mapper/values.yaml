@@ -11,6 +11,7 @@ image:
 env:
   java:
     opts: "-Xms128m -Xmx128m -XX:+UseG1GC -server"
+  document_store_api_url: ""
 resources:
   limits:
     memory: 320Mi
