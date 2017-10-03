@@ -121,7 +121,7 @@ public class MethodeContentCollectionMapperApplication extends Application<Metho
         jerseyConfig.setGzipEnabledForRequests(false);
 
         Client producerClient = ResilientClientBuilder.in(environment).using(jerseyConfig).usingDNS()
-                .named("content-collection-produ-client").build();
+                .named("content-collection-producer-client").build();
 
         final QueueProxyProducer.BuildNeeded queueProxyBuilder = QueueProxyProducer.builder()
                 .withJerseyClient(producerClient)
