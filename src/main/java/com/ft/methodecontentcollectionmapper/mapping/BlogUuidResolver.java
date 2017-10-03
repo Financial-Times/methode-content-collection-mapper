@@ -10,9 +10,6 @@ import org.slf4j.LoggerFactory;
 import java.net.URI;
 import java.util.Map;
 
-/**
- * Copied from methode-list-mapper.
- */
 public class BlogUuidResolver {
 
     private static final Logger LOG = LoggerFactory.getLogger(BlogUuidResolver.class);

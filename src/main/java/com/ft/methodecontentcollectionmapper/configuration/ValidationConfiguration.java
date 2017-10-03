@@ -6,9 +6,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Map;
 
-/**
- * Copied from methode-list-mapper.
- */
 public class ValidationConfiguration {
 
     private String authorityPrefix;

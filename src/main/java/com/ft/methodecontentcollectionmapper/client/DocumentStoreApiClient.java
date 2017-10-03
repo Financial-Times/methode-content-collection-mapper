@@ -19,9 +19,6 @@ import java.net.URLEncoder;
 
 import static com.ft.api.util.transactionid.TransactionIdUtils.TRANSACTION_ID_HEADER;
 
-/**
- * Copied from methode-list-mapper.
- */
 public class DocumentStoreApiClient extends UppServiceClient {
     private static final Logger LOG = LoggerFactory.getLogger(DocumentStoreApiClient.class);
     private static final String QUERY_PATH = "/content-query";
