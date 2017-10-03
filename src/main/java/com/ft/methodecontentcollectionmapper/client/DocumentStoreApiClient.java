@@ -1,6 +1,5 @@
 package com.ft.methodecontentcollectionmapper.client;
 
-import com.ft.methodecontentcollectionmapper.configuration.UppServiceConfiguration;
 import com.ft.methodecontentcollectionmapper.exception.TransientUuidResolverException;
 import com.ft.methodecontentcollectionmapper.exception.UuidResolverException;
 import com.sun.jersey.api.client.Client;
@@ -9,7 +8,6 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.filter.ClientFilter;
 import com.sun.jersey.client.apache4.ApacheHttpClient4Handler;
-import io.dropwizard.setup.Environment;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,19 +28,10 @@ public class DocumentStoreApiClient extends UppServiceClient {
     private static final String LISTS_PATH = "/lists";
 
     private final URI queryEndpoint;
-    private final URI listsEndpoint;
-
-    public DocumentStoreApiClient(UppServiceConfiguration uppServiceConfiguration, Environment environment) {
-        super(uppServiceConfiguration, environment);
-        queryEndpoint = UriBuilder.fromPath(QUERY_PATH).scheme("http").host(apiHost).port(apiPort).build();
-        listsEndpoint = UriBuilder.fromPath(LISTS_PATH).scheme("http").host(apiHost).port(apiPort).build();
-        configureJersey();
-    }
 
     public DocumentStoreApiClient(Client documentStoreJerseyClient, String docStoreHost, int docStorePort, String docStoreHostHeader) {
         super(documentStoreJerseyClient, docStoreHost, docStorePort, null, docStoreHostHeader);
         queryEndpoint = UriBuilder.fromPath(QUERY_PATH).scheme("http").host(apiHost).port(apiPort).build();
-        listsEndpoint = UriBuilder.fromPath(LISTS_PATH).scheme("http").host(apiHost).port(apiPort).build();
         configureJersey();
     }
 

@@ -118,7 +118,7 @@ public class EomFileToContentCollectionMapper {
   private String extractServiceId(XPath xPath, Document attributesDocument, UUID uuid) throws XPathExpressionException {
     final String serviceId = xPath.evaluate(XPATH_GUID, attributesDocument);
     if (Strings.isNullOrEmpty(serviceId)) {
-      throw new MethodeMissingFieldException(uuid, "serviceid", "List");
+      throw new MethodeMissingFieldException(uuid, XPATH_GUID);
     }
     return serviceId;
   }
@@ -126,7 +126,7 @@ public class EomFileToContentCollectionMapper {
   private String extractRefField(XPath xPath, Document attributesDocument, UUID uuid) throws XPathExpressionException {
     final String refField = xPath.evaluate(XPATH_POST_ID, attributesDocument);
     if (Strings.isNullOrEmpty(refField)) {
-      throw new MethodeMissingFieldException(uuid, "ref_field", "List");
+      throw new MethodeMissingFieldException(uuid, XPATH_POST_ID);
     }
     return refField;
   }
