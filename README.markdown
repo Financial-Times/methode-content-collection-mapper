@@ -15,6 +15,7 @@ A content package is a specific type of content collection which aims to include
 The application is dependent on the following microservices of the UPP stack:
 
 * [Kafka Proxy](https://github.com/Financial-Times/kafka-proxy), which is directly dependent on Zookeeper (and also on Kafka);
+* [document-store-api](https://github.com/Financial-Times/document-store-api)
 
 ## Running Locally
 To compile, run tests and build jar
@@ -29,9 +30,11 @@ Health check endpoints are available at `http://localhost:16081/healthcheck` and
 
 ## Expected behaviour 
 
-A transformation from a Methode story package to a UPP story package. The story package publish event is triggered when an article containing the story package component will be published. 
+A transformation from a Methode story package to a UPP story package. The story package publish event is triggered when an article containing the story package component will be published.
 
-The mapper reads events from the NativeCmsPublicationEvents topic and sends the transformed package to the CmsPublicationEvents topic. 
+The mapper reads events from the NativeCmsPublicationEvents topic and sends the transformed package to the CmsPublicationEvents topic.
+
+Content in the package that are Content Placeholders and that are pointing to an FT blog, will be searched for in the document-store-api and their original wordpress uuid will be used in the list.
 
 An example of expected mapper body response for a story package is provided below:
 ```json 
