@@ -47,7 +47,6 @@ public class DocStoreHealthCheck extends AdvancedHealthCheck {
             }
             webResourceBuilder.accept(MediaType.APPLICATION_JSON_TYPE);
             clientResponse = webResourceBuilder.get(ClientResponse.class);
-            LOGGER.info("Calling health check: {} {}",contentReadHeathCheckUri,hostHeaderValue);
             if (clientResponse.getStatus() != Response.Status.OK.getStatusCode()) {
                 LOGGER.warn(HTTP_ERROR_MESSAGE + clientResponse.getStatus());
                 return AdvancedResult.error(this, HTTP_ERROR_MESSAGE + clientResponse.getStatus());
@@ -61,7 +60,6 @@ public class DocStoreHealthCheck extends AdvancedHealthCheck {
                 clientResponse.close();
             }
         }
-
     }
 
     @Override
