@@ -1,11 +1,10 @@
 package com.ft.methodecontentcollectionmapper.configuration;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.dropwizard.Configuration;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.dropwizard.Configuration;
 
 public class MethodeContentCollectionMapperConfiguration extends Configuration {
     private final ConsumerConfiguration consumerConfiguration;

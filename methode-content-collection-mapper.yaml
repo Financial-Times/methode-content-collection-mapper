@@ -48,6 +48,12 @@ documentStoreApi:
         secondaryNodes: null
         resilienceStrategy: LOAD_BALANCED_IP_STRATEGY
     hostHeader: "document-store-api"
+    healthCheck:
+        name: Can connect document-store-api
+        severity: 2
+        businessImpact: Newly published Methode Content Collections containing internal placeholders will not be available from the Content API
+        panicGuideUrl: https://dewey.ft.com/document-store-api.html
+        technicalSummary: Tests that document-store-api is reachable and good-to-go.
 
 validationConfiguration:
     authorityPrefix: http://api.ft.com/system/
