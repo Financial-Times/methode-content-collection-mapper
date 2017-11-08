@@ -6,7 +6,9 @@ import javax.servlet.DispatcherType;
 
 import com.ft.methodecontentcollectionmapper.client.DocumentStoreApiClient;
 import com.ft.methodecontentcollectionmapper.configuration.UppServiceConfiguration;
+import com.ft.methodecontentcollectionmapper.health.DocStoreHealthCheck;
 import com.ft.methodecontentcollectionmapper.mapping.BlogUuidResolver;
+import com.ft.platform.dropwizard.AdvancedHealthCheck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,8 +62,9 @@ public class MethodeContentCollectionMapperApplication extends Application<Metho
         environment.jersey().register(new VersionResource());
         environment.jersey().register(new BuildInfoResource());
 
+        Client docStoreClient = createDocumentStoreClient(environment, configuration.getDocumentStoreApiConfiguration());
         DocumentStoreApiClient documentStoreApiClient = new DocumentStoreApiClient(
-                createDocumentStoreClient(environment, configuration.getDocumentStoreApiConfiguration()),
+                docStoreClient,
                 configuration.getDocumentStoreApiConfiguration().getEndpointConfiguration().getHost(),
                 configuration.getDocumentStoreApiConfiguration().getEndpointConfiguration().getPort(),
                 configuration.getDocumentStoreApiConfiguration().getHostHeader()
@@ -72,6 +75,7 @@ public class MethodeContentCollectionMapperApplication extends Application<Metho
                 configuration.getValidationConfiguration().getAuthorityPrefix(),
                 configuration.getValidationConfiguration().getBrandIdMappings()
         );
+        registerDocStoreHealthCheck(environment, configuration.getDocumentStoreApiConfiguration(), docStoreClient);
 
         EomFileToContentCollectionMapper eomContentCollectionMapper = new EomFileToContentCollectionMapper(blogUuidResolver);
         ConsumerConfiguration consumerConfig = configuration.getConsumerConfiguration();
@@ -150,5 +154,10 @@ public class MethodeContentCollectionMapperApplication extends Application<Metho
     private void registerConsumerHealthCheck(Environment environment, ConsumerConfiguration config, MessageQueueConsumerInitializer messageQueueConsumerInitializer) {
         environment.healthChecks().register("KafkaProxyConsumer", messageQueueConsumerInitializer
                 .buildPassiveConsumerHealthcheck(config.getHealthcheckConfiguration(), environment.metrics()));
+    }
+
+    private void registerDocStoreHealthCheck(Environment environment, UppServiceConfiguration config, Client httpClient) {
+        AdvancedHealthCheck healthCheck = new DocStoreHealthCheck(config.getHealthcheckConfiguration(), config, httpClient);
+        environment.healthChecks().register(config.getHealthcheckConfiguration().getName(), healthCheck);
     }
 }
