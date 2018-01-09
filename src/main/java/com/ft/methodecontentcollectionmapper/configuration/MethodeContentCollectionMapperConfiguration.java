@@ -1,17 +1,22 @@
 package com.ft.methodecontentcollectionmapper.configuration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ft.platform.dropwizard.AppInfo;
+import com.ft.platform.dropwizard.ConfigWithAppInfo;
 import io.dropwizard.Configuration;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-public class MethodeContentCollectionMapperConfiguration extends Configuration {
+public class MethodeContentCollectionMapperConfiguration extends Configuration implements ConfigWithAppInfo {
     private final ConsumerConfiguration consumerConfiguration;
     private final ProducerConfiguration producerConfiguration;
     private final UppServiceConfiguration documentStoreApiConfiguration;
     private final ValidationConfiguration validationConfiguration;
     private final String contentUriPrefix;
+
+    @JsonProperty
+    private AppInfo appInfo = new AppInfo();
 
     private MethodeContentCollectionMapperConfiguration(
             @NotNull @JsonProperty("consumer") ConsumerConfiguration consumerConfiguration,
@@ -49,5 +54,10 @@ public class MethodeContentCollectionMapperConfiguration extends Configuration {
     @Valid
     public String getContentUriPrefix() {
         return contentUriPrefix;
+    }
+
+    @Override
+    public AppInfo getAppInfo() {
+        return appInfo;
     }
 }
