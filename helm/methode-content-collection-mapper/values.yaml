@@ -14,6 +14,6 @@ env:
   document_store_api_url: ""
 resources:
   requests:
-    memory: 128Mi
+    memory: 256Mi
   limits:
     memory: 512Mi
