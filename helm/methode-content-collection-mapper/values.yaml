@@ -13,5 +13,7 @@ env:
     opts: "-Xms128m -Xmx128m -XX:+UseG1GC -server"
   document_store_api_url: ""
 resources:
+  requests:
+    memory: 256Mi
   limits:
-    memory: 320Mi
+    memory: 512Mi

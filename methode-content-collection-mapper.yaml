@@ -102,3 +102,7 @@ logging:
   appenders:
     - type: console
       logFormat: "%-5p [%d{ISO8601, GMT}] %c: %X{transaction_id} %m [%thread]%n%xEx"
+
+appInfo:
+  systemCode: "upp-mccm"
+  description: "Methode Content Collection Mapper (MCCM) is responsible for listening to new content collection publishes (i.e. content package or story package) on the kafka NativeCMSPublicationEvents queue, and then transforming them into UPP format and then writing them to kafka CMSPublicationEvents queue."
