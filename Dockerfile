@@ -1,9 +1,13 @@
 FROM coco/dropwizardbase
 
-COPY . /
+COPY . /methode-content-collection-mapper
 
 RUN apk --update add git \
+ && cd methode-content-collection-mapper \
  && HASH=$(git log -1 --pretty=format:%H) \
+ && TAG=$(git tag -l --points-at $HASH | head -n1) \
+ && VERSION=${TAG:-untagged} \
+ && mvn versions:set -DnewVersion=$VERSION \
  && mvn install -Dbuild.git.revision=$HASH -Djava.net.preferIPv4Stack=true \
  && rm -f target/methode-content-collection-mapper-*sources.jar \
  && mv target/methode-content-collection-mapper-*.jar /methode-content-collection-mapper.jar \
