@@ -4,6 +4,8 @@ import com.ft.methodecontentcollectionmapper.exception.TransientUuidResolverExce
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+
+import org.junit.Before;
 import org.junit.Test;
 
 import java.net.URI;
@@ -15,11 +17,19 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class DocumentStoreApiClientTest {
+	private Client mockedJerseyClient;
+	private WebResource mockedResource;
+	private WebResource.Builder mockedBuilder;
+	
+	@Before
+	public void setUp() {
+		mockedJerseyClient = mock(Client.class);
+		mockedResource = mock(WebResource.class);
+		mockedBuilder = mock(WebResource.Builder.class);
+	}
 
     @Test
     public void testResolveUUIDWhenOk() throws Exception {
-        Client mockedJerseyClient = mock(Client.class);
-        WebResource mockedResource = mock(WebResource.class);
         when(
                 mockedJerseyClient.resource(
                         URI.create("http://document-store-api:8080/content-query?" +
@@ -27,7 +37,6 @@ public class DocumentStoreApiClientTest {
                                 "identifierValue=http%3A%2F%2Fblogs.ft.com%2Fthe-world%2F%3Fp%3D1234")
                 )
         ).thenReturn(mockedResource);
-        WebResource.Builder mockedBuilder = mock(WebResource.Builder.class);
         when(mockedResource.getRequestBuilder()).thenReturn(mockedBuilder);
         when(mockedBuilder.header(TRANSACTION_ID_HEADER, "tid_1")).thenReturn(mockedBuilder);
         when(mockedBuilder.header("Host", "document-store-api")).thenReturn(mockedBuilder);
@@ -44,9 +53,7 @@ public class DocumentStoreApiClientTest {
     }
 
     @Test(expected = TransientUuidResolverException.class)
-    public void testThrowWhen404() throws Exception {
-        Client mockedJerseyClient = mock(Client.class);
-        WebResource mockedResource = mock(WebResource.class);
+    public void testResolveUUIDThrowWhen404() throws Exception {
         when(
                 mockedJerseyClient.resource(
                         URI.create("http://document-store-api:8080/content-query?" +
@@ -54,7 +61,6 @@ public class DocumentStoreApiClientTest {
                                 "identifierValue=http%3A%2F%2Fblogs.ft.com%2Fthe-world%2F%3Fp%3D1234")
                 )
         ).thenReturn(mockedResource);
-        WebResource.Builder mockedBuilder = mock(WebResource.Builder.class);
         when(mockedResource.getRequestBuilder()).thenReturn(mockedBuilder);
         when(mockedBuilder.header(TRANSACTION_ID_HEADER, "tid_1")).thenReturn(mockedBuilder);
         ClientResponse mockedResponse = mock(ClientResponse.class);
@@ -67,9 +73,7 @@ public class DocumentStoreApiClientTest {
     }
 
     @Test(expected = TransientUuidResolverException.class)
-    public void testThrowWhen503() throws Exception {
-        Client mockedJerseyClient = mock(Client.class);
-        WebResource mockedResource = mock(WebResource.class);
+    public void testResolveUUIDThrowWhen503() throws Exception {
         when(
                 mockedJerseyClient.resource(
                         URI.create("http://document-store-api:8080/content-query?" +
@@ -77,7 +81,6 @@ public class DocumentStoreApiClientTest {
                                 "identifierValue=http%3A%2F%2Fblogs.ft.com%2Fthe-world%2F%3Fp%3D1234")
                 )
         ).thenReturn(mockedResource);
-        WebResource.Builder mockedBuilder = mock(WebResource.Builder.class);
         when(mockedResource.getRequestBuilder()).thenReturn(mockedBuilder);
         when(mockedBuilder.header(TRANSACTION_ID_HEADER, "tid_1")).thenReturn(mockedBuilder);
         ClientResponse mockedResponse = mock(ClientResponse.class);
@@ -88,4 +91,21 @@ public class DocumentStoreApiClientTest {
 
         documentStoreClient.resolveUUID("http://api.ft.com/system/FT-LABS-WP-1-2", "http://blogs.ft.com/the-world/?p=1234", "tid_1");
     }
+	
+	@Test
+	public void canResolveUUIDWhenOk() {
+		when(mockedJerseyClient.resource(URI.create("http://document-store-api:8080/content/38b81198-f18e-11e8-911c-a20996806a68"))).thenReturn(mockedResource);
+		when(mockedResource.getRequestBuilder()).thenReturn(mockedBuilder);
+		when(mockedBuilder.header(TRANSACTION_ID_HEADER, "tid_1")).thenReturn(mockedBuilder);
+
+		ClientResponse mockedResponse = mock(ClientResponse.class);
+		when(mockedBuilder.get(ClientResponse.class)).thenReturn(mockedResponse);
+		doNothing().when(mockedResponse).close();
+		when(mockedResponse.getStatus()).thenReturn(200);
+
+		DocumentStoreApiClient documentStoreClient = new DocumentStoreApiClient(mockedJerseyClient, "document-store-api", 8080, "");
+		documentStoreClient.canResolveUUID("38b81198-f18e-11e8-911c-a20996806a68", "tid_1");
+
+	}
 }
+

@@ -1,20 +1,5 @@
 package com.ft.methodecontentcollectionmapper.mapping;
 
-import com.ft.methodecontentcollectionmapper.exception.TransformationException;
-import com.ft.methodecontentcollectionmapper.exception.UnsupportedTypeException;
-import com.ft.methodecontentcollectionmapper.exception.UuidResolverException;
-import com.ft.methodecontentcollectionmapper.model.ContentCollection;
-import com.ft.methodecontentcollectionmapper.model.EomFile;
-import com.ft.methodecontentcollectionmapper.model.EomLinkedObject;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Date;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
@@ -22,6 +7,24 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Date;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import com.ft.methodecontentcollectionmapper.client.DocumentStoreApiClient;
+import com.ft.methodecontentcollectionmapper.exception.TransformationException;
+import com.ft.methodecontentcollectionmapper.exception.UnsupportedTypeException;
+import com.ft.methodecontentcollectionmapper.exception.UuidResolverException;
+import com.ft.methodecontentcollectionmapper.model.ContentCollection;
+import com.ft.methodecontentcollectionmapper.model.EomFile;
+import com.ft.methodecontentcollectionmapper.model.EomLinkedObject;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EomFileToContentCollectionMapperTest {
@@ -48,11 +51,20 @@ public class EomFileToContentCollectionMapperTest {
                     + "<subFolder>Asia</subFolder>\n<templateName>/FT/Library/Masters/DwcTemplates/Story ContentCollection.dwc</templateName>\n</props>";
 
     private EomFile eomFileContentCollection;
+    private EomFileToContentCollectionMapper eomContentCollectionMapper;
+    private BlogUuidResolver blogUuidResolver;
+    private DocumentStoreApiClient docStoreClient;
+    
+	@Before
+	public void setUp() {
+		blogUuidResolver = mock(BlogUuidResolver.class);
+		docStoreClient = mock(DocumentStoreApiClient.class);
+		eomContentCollectionMapper = new EomFileToContentCollectionMapper(
+				docStoreClient, blogUuidResolver);
+	}
 
     @Test(expected = UnsupportedTypeException.class)
     public void shouldThrowUnsupportedTypeExceptionForNotContentCollectionTypes() {
-        BlogUuidResolver blogUuidResolver = mock(BlogUuidResolver.class);
-        EomFileToContentCollectionMapper eomContentCollectionMapper = new EomFileToContentCollectionMapper(blogUuidResolver);
         mockContentCollection(CONTENT_COLLECTION_UUID, "");
         eomContentCollectionMapper.mapPackage(eomFileContentCollection, TRANSACTION_ID, LAST_MODIFIED);
     }
@@ -60,8 +72,6 @@ public class EomFileToContentCollectionMapperTest {
     @Test
     public void shouldReturnStoryPackageWithNoItems() {
         mockContentCollection(CONTENT_COLLECTION_UUID, STORY_PACKAGE_TYPE);
-        BlogUuidResolver blogUuidResolver = mock(BlogUuidResolver.class);
-        EomFileToContentCollectionMapper eomContentCollectionMapper = new EomFileToContentCollectionMapper(blogUuidResolver);
         final ContentCollection actualStoryPackage = eomContentCollectionMapper.mapPackage(eomFileContentCollection, TRANSACTION_ID, LAST_MODIFIED);
 
         assertThat(actualStoryPackage.getItems().size(), equalTo(0));
@@ -70,8 +80,6 @@ public class EomFileToContentCollectionMapperTest {
     @Test
     public void shouldReturnContentPackageWithNoItems() {
         mockContentCollection(CONTENT_COLLECTION_UUID, CONTENT_PACKAGE_TYPE);
-        BlogUuidResolver blogUuidResolver = mock(BlogUuidResolver.class);
-        EomFileToContentCollectionMapper eomContentCollectionMapper = new EomFileToContentCollectionMapper(blogUuidResolver);
         final ContentCollection actualContentPackage = eomContentCollectionMapper.mapPackage(eomFileContentCollection, TRANSACTION_ID, LAST_MODIFIED);
 
         assertThat(actualContentPackage.getItems().size(), equalTo(0));
@@ -80,8 +88,6 @@ public class EomFileToContentCollectionMapperTest {
     @Test
     public void shouldNotThrowExceptionIfItemListIsNull() throws Exception {
         mockContentCollection(CONTENT_COLLECTION_UUID, STORY_PACKAGE_TYPE, (EomLinkedObject[]) null);
-        BlogUuidResolver blogUuidResolver = mock(BlogUuidResolver.class);
-        EomFileToContentCollectionMapper eomContentCollectionMapper = new EomFileToContentCollectionMapper(blogUuidResolver);
         final ContentCollection actualStoryPackage = eomContentCollectionMapper.mapPackage(eomFileContentCollection, TRANSACTION_ID, LAST_MODIFIED);
 
         assertThat(actualStoryPackage, is(notNullValue()));
@@ -97,8 +103,6 @@ public class EomFileToContentCollectionMapperTest {
                 new EomLinkedObject.Builder().withUuid(ITEM_UUID_1).withType("Story").build(),
                 new EomLinkedObject.Builder().withUuid(ITEM_UUID_2).withType("Story").build()
         );
-        BlogUuidResolver blogUuidResolver = mock(BlogUuidResolver.class);
-        EomFileToContentCollectionMapper eomContentCollectionMapper = new EomFileToContentCollectionMapper(blogUuidResolver);
         final ContentCollection actualStoryPackage = eomContentCollectionMapper.mapPackage(eomFileContentCollection, TRANSACTION_ID, LAST_MODIFIED);
 
         assertThat(actualStoryPackage.getItems().size(), equalTo(2));
@@ -112,8 +116,6 @@ public class EomFileToContentCollectionMapperTest {
                 new EomLinkedObject.Builder().withUuid(ITEM_UUID_1).withType("Story").build(),
                 new EomLinkedObject.Builder().withUuid(ITEM_UUID_2).withType("Story").build()
         );
-        BlogUuidResolver blogUuidResolver = mock(BlogUuidResolver.class);
-        EomFileToContentCollectionMapper eomContentCollectionMapper = new EomFileToContentCollectionMapper(blogUuidResolver);
         final ContentCollection actualStoryPackage = eomContentCollectionMapper.mapPackage(eomFileContentCollection, TRANSACTION_ID, LAST_MODIFIED);
 
         assertThat(actualStoryPackage.getItems().size(), equalTo(2));
@@ -128,9 +130,7 @@ public class EomFileToContentCollectionMapperTest {
                 new EomLinkedObject.Builder().withUuid("2e94f688-9dcd-11e7-b832-26b3e1fb1780").withType("Story")
                         .withAttributes(new String(Files.readAllBytes(Paths.get("src/test/resources/blog-attributes.xml")))).build()
         );
-        BlogUuidResolver blogUuidResolver = mock(BlogUuidResolver.class);
         when(blogUuidResolver.resolveUuid("http://ftalphaville.ft.com/?p=2193913", "2193913", TRANSACTION_ID)).thenReturn("98f3d2e8-f392-4401-b817-040b36b51e9d");
-        EomFileToContentCollectionMapper eomContentCollectionMapper = new EomFileToContentCollectionMapper(blogUuidResolver);
         final ContentCollection actualStoryPackage = eomContentCollectionMapper.mapPackage(eomFileContentCollection, TRANSACTION_ID, LAST_MODIFIED);
 
         assertThat(actualStoryPackage.getItems().size(), equalTo(2));
@@ -146,9 +146,7 @@ public class EomFileToContentCollectionMapperTest {
                 new EomLinkedObject.Builder().withUuid("2e94f688-9dcd-11e7-b832-26b3e1fb1780").withType("Story")
                         .withAttributes(new String(Files.readAllBytes(Paths.get("src/test/resources/blog-attributes.xml")))).build()
         );
-        BlogUuidResolver blogUuidResolver = mock(BlogUuidResolver.class);
         when(blogUuidResolver.resolveUuid("http://ftalphaville.ft.com/?p=2193913", "2193913", TRANSACTION_ID)).thenThrow(new UuidResolverException("can't resolve"));
-        EomFileToContentCollectionMapper eomContentCollectionMapper = new EomFileToContentCollectionMapper(blogUuidResolver);
         eomContentCollectionMapper.mapPackage(eomFileContentCollection, TRANSACTION_ID, LAST_MODIFIED);
     }
 
@@ -160,7 +158,6 @@ public class EomFileToContentCollectionMapperTest {
                 new EomLinkedObject.Builder().withUuid(ITEM_UUID_1).withType("Story").build(),
                 new EomLinkedObject.Builder().withUuid("2e94f688-9dcd-11e7-b832-26b3e1fb1780").withType("Story").withAttributes("<incorrect><xml").build()
         );
-        EomFileToContentCollectionMapper eomContentCollectionMapper = new EomFileToContentCollectionMapper(null);
         eomContentCollectionMapper.mapPackage(eomFileContentCollection, TRANSACTION_ID, LAST_MODIFIED);
     }
 
