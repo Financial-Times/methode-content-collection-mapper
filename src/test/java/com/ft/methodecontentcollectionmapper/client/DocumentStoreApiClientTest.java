@@ -1,22 +1,26 @@
 package com.ft.methodecontentcollectionmapper.client;
 
-import com.ft.methodecontentcollectionmapper.exception.TransientUuidResolverException;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import java.net.URI;
-
 import static com.ft.api.util.transactionid.TransactionIdUtils.TRANSACTION_ID_HEADER;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.net.URI;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import com.ft.methodecontentcollectionmapper.exception.TransientUuidResolverException;
+import com.ft.methodecontentcollectionmapper.exception.UuidResolverException;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+
 public class DocumentStoreApiClientTest {
+	private static final String VALID_UUID = "38b81198-f18e-11e8-911c-a20996806a68";
+	private static final String DOC_STORE_CONTENT_ENDPOINT = "http://document-store-api:8080/content/";
+	
 	private Client mockedJerseyClient;
 	private WebResource mockedResource;
 	private WebResource.Builder mockedBuilder;
@@ -93,8 +97,9 @@ public class DocumentStoreApiClientTest {
     }
 	
 	@Test
-	public void canResolveUUIDWhenOk() {
-		when(mockedJerseyClient.resource(URI.create("http://document-store-api:8080/content/38b81198-f18e-11e8-911c-a20996806a68"))).thenReturn(mockedResource);
+	public void canResolveUUIDWhenResponse200() {
+		String uriString = String.format("%s%s", DOC_STORE_CONTENT_ENDPOINT, VALID_UUID);
+		when(mockedJerseyClient.resource(URI.create(uriString))).thenReturn(mockedResource);
 		when(mockedResource.getRequestBuilder()).thenReturn(mockedBuilder);
 		when(mockedBuilder.header(TRANSACTION_ID_HEADER, "tid_1")).thenReturn(mockedBuilder);
 
@@ -104,8 +109,35 @@ public class DocumentStoreApiClientTest {
 		when(mockedResponse.getStatus()).thenReturn(200);
 
 		DocumentStoreApiClient documentStoreClient = new DocumentStoreApiClient(mockedJerseyClient, "document-store-api", 8080, "");
-		documentStoreClient.canResolveUUID("38b81198-f18e-11e8-911c-a20996806a68", "tid_1");
+		boolean canResolveUUID = documentStoreClient.canResolveUUID(VALID_UUID, "tid_1");
+		
+		assertEquals(true, canResolveUUID);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void canResolveUUIDWhenIllegalArgumentException() {
+		DocumentStoreApiClient documentStoreClient = new DocumentStoreApiClient(mockedJerseyClient, "document-store-api", 8080, "");
+		boolean canResolveUUID = documentStoreClient.canResolveUUID("uuid", "tid_1");
+		
+		assertEquals(false, canResolveUUID);
+	}
+	
+	@Test(expected = UuidResolverException.class)
+	public void canResolveUUIDWhenUuidResolverException() {
+		String uriString = String.format("%s%s", DOC_STORE_CONTENT_ENDPOINT, VALID_UUID);
+		when(mockedJerseyClient.resource(URI.create(uriString))).thenReturn(mockedResource);
+		when(mockedResource.getRequestBuilder()).thenReturn(mockedBuilder);
+		when(mockedBuilder.header(TRANSACTION_ID_HEADER, "tid_1")).thenReturn(mockedBuilder);
 
+		ClientResponse mockedResponse = mock(ClientResponse.class);
+		when(mockedBuilder.get(ClientResponse.class)).thenReturn(mockedResponse);
+		doNothing().when(mockedResponse).close();
+		when(mockedResponse.getStatus()).thenReturn(503);
+		
+		DocumentStoreApiClient documentStoreClient = new DocumentStoreApiClient(mockedJerseyClient, "document-store-api", 8080, "");
+		boolean canResolveUUID = documentStoreClient.canResolveUUID(VALID_UUID, "tid_1");
+		
+		assertEquals(false, canResolveUUID);
 	}
 }
 

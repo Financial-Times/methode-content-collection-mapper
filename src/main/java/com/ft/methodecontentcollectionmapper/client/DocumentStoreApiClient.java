@@ -102,10 +102,10 @@ public class DocumentStoreApiClient extends UppServiceClient {
 	
 	public boolean canResolveUUID(String uuid, String transactionId) {
 		Matcher matcher = UUID_PATTERN.matcher(uuid);
-        if(!matcher.matches()) {
-            throw new IllegalArgumentException(String.format("The uuid: %s is not valid.", uuid));
-        }
-		
+		if (!matcher.matches()) {
+			throw new IllegalArgumentException(String.format("The uuid: %s is not valid.", uuid));
+		}
+
 		final URI contentUri = UriBuilder.fromUri(contentEndpoint).path(uuid).build();
 		LOG.info("Calling Content endpoint: {}", contentUri);
 
@@ -117,7 +117,7 @@ public class DocumentStoreApiClient extends UppServiceClient {
 		if (response.getStatus() != HttpStatus.SC_OK) {
 			throw new UuidResolverException(String.format("Cannot resolve uuid: %s in DocumentStore", uuid));
 		}
-		
+
 		return true;
 	}
 	

@@ -5,7 +5,7 @@ public class UnsupportedTypeException extends RuntimeException {
     private final String uuid;
 
     public UnsupportedTypeException(String uuid, String type, String expectedType) {
-        super(String.format("[%s] not an %s.", type, expectedType));
+        super(String.format("Expected content type: [%s], but was: [%s] for uuid %s.", expectedType, type, uuid));
         this.uuid = uuid;
     }
 
