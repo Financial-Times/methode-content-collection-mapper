@@ -24,7 +24,6 @@ import com.ft.methodecontentcollectionmapper.client.DocumentStoreApiClient;
 import com.ft.methodecontentcollectionmapper.exception.ContentCollectionMapperException;
 import com.ft.methodecontentcollectionmapper.exception.MethodeMissingFieldException;
 import com.ft.methodecontentcollectionmapper.exception.TransformationException;
-import com.ft.methodecontentcollectionmapper.exception.UnsupportedTypeException;
 import com.ft.methodecontentcollectionmapper.exception.UuidResolverException;
 import com.ft.methodecontentcollectionmapper.model.ContentCollection;
 import com.ft.methodecontentcollectionmapper.model.ContentCollectionType;
@@ -92,22 +91,29 @@ public class EomFileToContentCollectionMapper {
 	}
 
 	private Item resolveContentPlaceholder(Document attributesDocument, String linkedObjectUUID, String tid)
-			throws XPathExpressionException, ParserConfigurationException, SAXException, IOException {
+			throws XPathExpressionException {
 		final XPath xpath = XPathFactory.newInstance().newXPath();
 		String originalUUID = extractOriginalUUID(xpath, attributesDocument);
 
-		// this is a CPH referencing a blog
 		if (Strings.isNullOrEmpty(originalUUID)) {
-			return resolveToBlogItem(attributesDocument, linkedObjectUUID, tid);
-		}
+			String listItemWiredIndexType = extractListItemWiredIndexType(xpath, attributesDocument);
 
-		try {
-			if (client.canResolveUUID(originalUUID, tid)) {
-				// this is a CPH referencing an internal content
-				return new Item.Builder().withUuid(originalUUID).build();
+			// this is a CPH referencing a blog
+			if (BLOG_CATEGORIES.contains(listItemWiredIndexType)) {
+				return resolveToBlogItem(attributesDocument, linkedObjectUUID, tid);
 			}
 			// this is a CPH referencing an external content
 			return new Item.Builder().withUuid(linkedObjectUUID).build();
+		}
+
+		try {
+			if (!client.canResolveUUID(originalUUID, tid)) {
+				throw new UuidResolverException(String.format(
+						"Cannot resolve in DocStore originalUUID: [%s] for internal content placeholder: [%s]",
+						originalUUID, linkedObjectUUID));
+			}
+			// this is a CPH referencing an internal content
+			return new Item.Builder().withUuid(originalUUID).build();
 		} catch (IllegalArgumentException | UuidResolverException e) {
 			throw new ContentCollectionMapperException("Unable to map content package", e);
 		}
@@ -115,13 +121,8 @@ public class EomFileToContentCollectionMapper {
 
 	private Item resolveToBlogItem(Document attributesDocument, String linkedObjectUUID, String tid)
 			throws XPathExpressionException {
-		final XPath xpath = XPathFactory.newInstance().newXPath();
-		String listItemWiredIndexType = extractListItemWiredIndexType(xpath, attributesDocument);
-		if (!BLOG_CATEGORIES.contains(listItemWiredIndexType)) {
-			throw new UnsupportedTypeException(linkedObjectUUID, listItemWiredIndexType, "blog");
-		}
-
 		UUID fromStringUUID = UUID.fromString(linkedObjectUUID);
+		final XPath xpath = XPathFactory.newInstance().newXPath();
 		final String referenceId = extractWiredIndexField(XPATH_POST_ID, xpath, attributesDocument, fromStringUUID);
 		final String serviceId = extractWiredIndexField(XPATH_GUID, xpath, attributesDocument, fromStringUUID);
 

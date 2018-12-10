@@ -153,17 +153,17 @@ public class EomFileToContentCollectionMapperTest {
         eomContentCollectionMapper.mapPackage(eomFileContentCollection, TRANSACTION_ID, LAST_MODIFIED);
     }
     
-    @Test(expected = UnsupportedTypeException.class)
-    public void shouldThrowIfInvalidBlogCategoryWhenOriginalUuidMissing() throws IOException {
-    	 mockContentCollection(
-                 CONTENT_COLLECTION_UUID,
-                 CONTENT_PACKAGE_TYPE,
-                 new EomLinkedObject.Builder().withUuid(ITEM_UUID_1).withType("Story").build(),
-                 new EomLinkedObject.Builder().withUuid("2e94f688-9dcd-11e7-b832-26b3e1fb1780").withType("Story")
-                         .withAttributes(new String(Files.readAllBytes(Paths.get("src/test/resources/invalid-category-blog-attributes.xml")))).build()
-         );
-         when(blogUuidResolver.resolveUuid("http://ftalphaville.ft.com/?p=2193913", "2193913", TRANSACTION_ID)).thenThrow(new UuidResolverException("can't resolve"));
-         eomContentCollectionMapper.mapPackage(eomFileContentCollection, TRANSACTION_ID, LAST_MODIFIED);
+    @Test
+    public void shouldReturnLinkedUuidWhenNotBlogAndOriginalUuidMissing() throws IOException {
+    	mockContentCollection(CONTENT_COLLECTION_UUID, CONTENT_PACKAGE_TYPE,
+				new EomLinkedObject.Builder().withUuid(CPH_UUID).withType("Story")
+						.withAttributes(new String(
+								Files.readAllBytes(Paths.get("src/test/resources/invalid-category-blog-attributes.xml"))))
+						.build());
+    	ContentCollection actualStoryPackage = eomContentCollectionMapper.mapPackage(eomFileContentCollection, TRANSACTION_ID, LAST_MODIFIED);
+    	
+    	assertThat(actualStoryPackage.getItems().size(), equalTo(1));
+    	assertEquals(actualStoryPackage.getItems().get(0).getUuid(), CPH_UUID);
     }
 
 	@Test
