@@ -77,7 +77,7 @@ public class EomFileToContentCollectionMapper {
 		if (linkedObjects == null) {
 			return Collections.emptyList();
 		}
-		
+
 		List<Item> items = new LinkedList<>();
 		for (final EomLinkedObject linkedObject : linkedObjects) {
 			Document attributesDocument = getLinkedObjectAttributes(linkedObject);
@@ -101,7 +101,7 @@ public class EomFileToContentCollectionMapper {
 			return resolveToBlogItem(attributesDocument, linkedObjectUUID, tid);
 		}
 
-		try { 
+		try {
 			if (client.canResolveUUID(originalUUID, tid)) {
 				// this is a CPH referencing an internal content
 				return new Item.Builder().withUuid(originalUUID).build();
@@ -122,10 +122,10 @@ public class EomFileToContentCollectionMapper {
 		}
 
 		UUID fromStringUUID = UUID.fromString(linkedObjectUUID);
-		final String referenceId = extractRefField(xpath, attributesDocument, fromStringUUID);
-		final String guid = extractServiceId(xpath, attributesDocument, fromStringUUID);
+		final String referenceId = extractWiredIndexField(XPATH_POST_ID, xpath, attributesDocument, fromStringUUID);
+		final String serviceId = extractWiredIndexField(XPATH_GUID, xpath, attributesDocument, fromStringUUID);
 
-		return new Item.Builder().withUuid(blogUuidResolver.resolveUuid(guid, referenceId, tid)).build();
+		return new Item.Builder().withUuid(blogUuidResolver.resolveUuid(serviceId, referenceId, tid)).build();
 	}
 
 	private DocumentBuilder getDocumentBuilder() throws ParserConfigurationException {
@@ -164,21 +164,12 @@ public class EomFileToContentCollectionMapper {
 		return xPath.evaluate(XPATH_LIST_ITEM_TYPE, attributesDocument);
 	}
 
-	private String extractServiceId(XPath xPath, Document attributesDocument, UUID uuid)
+	private String extractWiredIndexField(String fieldName, XPath xPath, Document attributesDocument, UUID uuid)
 			throws XPathExpressionException {
-		final String serviceId = xPath.evaluate(XPATH_GUID, attributesDocument);
-		if (Strings.isNullOrEmpty(serviceId)) {
-			throw new MethodeMissingFieldException(uuid, XPATH_GUID);
+		final String extractedField = xPath.evaluate(fieldName, attributesDocument);
+		if (Strings.isNullOrEmpty(extractedField)) {
+			throw new MethodeMissingFieldException(uuid, fieldName);
 		}
-		return serviceId;
-	}
-
-	private String extractRefField(XPath xPath, Document attributesDocument, UUID uuid)
-			throws XPathExpressionException {
-		final String refField = xPath.evaluate(XPATH_POST_ID, attributesDocument);
-		if (Strings.isNullOrEmpty(refField)) {
-			throw new MethodeMissingFieldException(uuid, XPATH_POST_ID);
-		}
-		return refField;
+		return extractedField;
 	}
 }
