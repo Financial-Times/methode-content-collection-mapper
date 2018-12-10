@@ -26,7 +26,7 @@ import com.sun.jersey.client.apache4.ApacheHttpClient4Handler;
 public class DocumentStoreApiClient extends UppServiceClient {
     private static final Logger LOG = LoggerFactory.getLogger(DocumentStoreApiClient.class);
     private static final String QUERY_PATH = "/content-query";
-    private static final String CONTENT_QUERY = "/content";
+    private static final String CONTENT_PATH = "/content";
     private static final String UUID_REGEX = "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$";
     private static final Pattern UUID_PATTERN = Pattern.compile(UUID_REGEX);
 
@@ -36,7 +36,7 @@ public class DocumentStoreApiClient extends UppServiceClient {
     public DocumentStoreApiClient(Client documentStoreJerseyClient, String docStoreHost, int docStorePort, String docStoreHostHeader) {
         super(documentStoreJerseyClient, docStoreHost, docStorePort, null, docStoreHostHeader);
         queryEndpoint = UriBuilder.fromPath(QUERY_PATH).scheme("http").host(apiHost).port(apiPort).build();
-        contentEndpoint = UriBuilder.fromPath(CONTENT_QUERY).scheme("http").host(apiHost).port(apiPort).build();
+        contentEndpoint = UriBuilder.fromPath(CONTENT_PATH).scheme("http").host(apiHost).port(apiPort).build();
         configureJersey();
     }
 
@@ -114,11 +114,14 @@ public class DocumentStoreApiClient extends UppServiceClient {
 		builder = builder.header(TRANSACTION_ID_HEADER, transactionId);
 
 		final ClientResponse response = builder.get(ClientResponse.class);
-		if (response.getStatus() != HttpStatus.SC_OK) {
+		switch (response.getStatus()) {
+		case HttpStatus.SC_OK:
+			return true;
+		case HttpStatus.SC_NOT_FOUND:
+			return false;
+		default:
 			throw new UuidResolverException(String.format("Cannot resolve uuid: %s in DocumentStore", uuid));
 		}
-
-		return true;
 	}
 	
     private String lastPath(String url) {

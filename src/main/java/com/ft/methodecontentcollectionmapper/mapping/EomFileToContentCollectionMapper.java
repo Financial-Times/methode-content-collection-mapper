@@ -101,17 +101,20 @@ public class EomFileToContentCollectionMapper {
 			return resolveToBlogItem(attributesDocument, linkedObjectUUID, tid);
 		}
 
-		// this is a CPH referencing an internal content
-		try {
-			client.canResolveUUID(originalUUID, tid);
-			return new Item.Builder().withUuid(originalUUID).build();
+		try { 
+			if (client.canResolveUUID(originalUUID, tid)) {
+				// this is a CPH referencing an internal content
+				return new Item.Builder().withUuid(originalUUID).build();
+			}
+			// this is a CPH referencing an external content
+			return new Item.Builder().withUuid(linkedObjectUUID).build();
 		} catch (IllegalArgumentException | UuidResolverException e) {
-			throw new ContentCollectionMapperException(String.format("Unable to map content package"), e);
+			throw new ContentCollectionMapperException("Unable to map content package", e);
 		}
 	}
 
 	private Item resolveToBlogItem(Document attributesDocument, String linkedObjectUUID, String tid)
-			throws XPathExpressionException, ParserConfigurationException, SAXException, IOException {
+			throws XPathExpressionException {
 		final XPath xpath = XPathFactory.newInstance().newXPath();
 		String listItemWiredIndexType = extractListItemWiredIndexType(xpath, attributesDocument);
 		if (!BLOG_CATEGORIES.contains(listItemWiredIndexType)) {
