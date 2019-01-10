@@ -1,0 +1,15 @@
+<ObjectMetadata>
+	<EditorialNotes>
+		<Sources>
+			<Source title="FT ContentPlaceholder">
+				<SourceCode>ContentPlaceholder</SourceCode>
+				<SourceDescriptor>FT ContentPlaceholder</SourceDescriptor>
+			</Source>
+		</Sources>
+	</EditorialNotes>
+	<WiresIndexing>
+		<category>test</category>
+		<serviceid>http://ftalphaville.ft.com/?p=2193913</serviceid>
+		<ref_field>2193913</ref_field>
+	</WiresIndexing>
+</ObjectMetadata>

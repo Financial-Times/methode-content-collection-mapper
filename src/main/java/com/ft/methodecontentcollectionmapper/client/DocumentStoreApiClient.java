@@ -1,5 +1,19 @@
 package com.ft.methodecontentcollectionmapper.client;
 
+import static com.ft.api.util.transactionid.TransactionIdUtils.TRANSACTION_ID_HEADER;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.ws.rs.core.UriBuilder;
+
+import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ft.methodecontentcollectionmapper.exception.TransientUuidResolverException;
 import com.ft.methodecontentcollectionmapper.exception.UuidResolverException;
 import com.sun.jersey.api.client.Client;
@@ -8,27 +22,21 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.filter.ClientFilter;
 import com.sun.jersey.client.apache4.ApacheHttpClient4Handler;
-import org.apache.http.HttpStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.ws.rs.core.UriBuilder;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URLEncoder;
-
-import static com.ft.api.util.transactionid.TransactionIdUtils.TRANSACTION_ID_HEADER;
 
 public class DocumentStoreApiClient extends UppServiceClient {
     private static final Logger LOG = LoggerFactory.getLogger(DocumentStoreApiClient.class);
     private static final String QUERY_PATH = "/content-query";
-    private static final String LISTS_PATH = "/lists";
+    private static final String CONTENT_PATH = "/content";
+    private static final String UUID_REGEX = "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$";
+    private static final Pattern UUID_PATTERN = Pattern.compile(UUID_REGEX);
 
     private final URI queryEndpoint;
+    private final URI contentEndpoint;
 
     public DocumentStoreApiClient(Client documentStoreJerseyClient, String docStoreHost, int docStorePort, String docStoreHostHeader) {
         super(documentStoreJerseyClient, docStoreHost, docStorePort, null, docStoreHostHeader);
         queryEndpoint = UriBuilder.fromPath(QUERY_PATH).scheme("http").host(apiHost).port(apiPort).build();
+        contentEndpoint = UriBuilder.fromPath(CONTENT_PATH).scheme("http").host(apiHost).port(apiPort).build();
         configureJersey();
     }
 
@@ -90,8 +98,32 @@ public class DocumentStoreApiClient extends UppServiceClient {
 
             return uuid;
         });
-    }
+	}
+	
+	public boolean canResolveUUID(String uuid, String transactionId) {
+		Matcher matcher = UUID_PATTERN.matcher(uuid);
+		if (!matcher.matches()) {
+			throw new IllegalArgumentException(String.format("The uuid: %s is not valid.", uuid));
+		}
 
+		final URI contentUri = UriBuilder.fromUri(contentEndpoint).path(uuid).build();
+		LOG.info("Calling Content endpoint: {}", contentUri);
+
+		WebResource webResource = jerseyClient.resource(contentUri);
+		WebResource.Builder builder = webResource.getRequestBuilder();
+		builder = builder.header(TRANSACTION_ID_HEADER, transactionId);
+
+		final ClientResponse response = builder.get(ClientResponse.class);
+		switch (response.getStatus()) {
+		case HttpStatus.SC_OK:
+			return true;
+		case HttpStatus.SC_NOT_FOUND:
+			return false;
+		default:
+			throw new UuidResolverException(String.format("Cannot resolve uuid: %s in DocumentStore", uuid));
+		}
+	}
+	
     private String lastPath(String url) {
         return url.substring(url.lastIndexOf("/") + 1);
     }

@@ -77,7 +77,7 @@ public class MethodeContentCollectionMapperApplication extends Application<Metho
         );
         registerDocStoreHealthCheck(environment, configuration.getDocumentStoreApiConfiguration(), docStoreClient);
 
-        EomFileToContentCollectionMapper eomContentCollectionMapper = new EomFileToContentCollectionMapper(blogUuidResolver);
+        EomFileToContentCollectionMapper eomContentCollectionMapper = new EomFileToContentCollectionMapper(documentStoreApiClient, blogUuidResolver);
         ConsumerConfiguration consumerConfig = configuration.getConsumerConfiguration();
         ContentCollectionValidator contentCollectionValidator = new ContentCollectionValidator();
 

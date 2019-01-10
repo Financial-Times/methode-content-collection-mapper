@@ -1,0 +1,159 @@
+<ObjectMetadata>
+	<EditorialDisplayIndexing>
+		<DILeadCompanies />
+		<DITemporaryCompanies>
+			<DITemporaryCompany>
+				<DICoTempCode />
+				<DICoTempDescriptor />
+				<DICoTickerCode />
+			</DITemporaryCompany>
+		</DITemporaryCompanies>
+		<DIFTSEGlobalClassifications />
+		<DIStockExchangeIndices />
+		<DIHotTopics />
+		<DIHeadlineCopy>Questions raised over Bitmain profits after IPO filing
+		</DIHeadlineCopy>
+		<DIBylineCopy>Mustafa Sogancilar</DIBylineCopy>
+		<DIFTNPSections />
+		<DIFirstParCopy>Discrepancies in profit figures cited by world’s
+			largest crypto mining hardware maker
+		</DIFirstParCopy>
+		<DIMasterImgFileRef />
+	</EditorialDisplayIndexing>
+	<OutputChannels>
+		<DIFTN>
+			<DIFTNPublicationDate />
+			<DIFTNZoneEdition />
+			<DIFTNPage />
+			<DIFTNTimeEdition />
+			<DIFTNFronts />
+		</DIFTN>
+		<DIFTcom>
+			<DIFTcomWebType>story</DIFTcomWebType>
+			<pushNotification>None</pushNotification>
+			<DIFTcomDisplayCodes>
+				<DIFTcomDisplayCodeRank1 />
+				<DIFTcomDisplayCodeRank2 />
+			</DIFTcomDisplayCodes>
+			<DIFTcomSubscriptionLevel>0</DIFTcomSubscriptionLevel>
+			<DIFTcomUpdateTimeStamp>False</DIFTcomUpdateTimeStamp>
+			<DIFTcomIndexAndSynd>true</DIFTcomIndexAndSynd>
+			<DIFTcomSafeToSyndicate>True</DIFTcomSafeToSyndicate>
+			<DIFTcomInitialPublication>20181126152957</DIFTcomInitialPublication>
+			<DIFTcomLastPublication>20181126152957</DIFTcomLastPublication>
+			<DIFTcomSuppresInlineAds>False</DIFTcomSuppresInlineAds>
+			<DIFTcomMap>True</DIFTcomMap>
+			<DIFTcomDisplayStyle>Normal</DIFTcomDisplayStyle>
+			<DIFTcomFeatureType>Normal</DIFTcomFeatureType>
+			<DIFTcomMarkDeleted>False</DIFTcomMarkDeleted>
+			<DIFTcomMakeUnlinkable>False</DIFTcomMakeUnlinkable>
+			<isBestStory>0</isBestStory>
+			<DesignLayout>Default</DesignLayout>
+			<isContentPackage>False</isContentPackage>
+			<DesignTheme>Basic</DesignTheme>
+			<editorsPick>No</editorsPick>
+			<scoop>No</scoop>
+			<exclusive>No</exclusive>
+			<breakingNews>No</breakingNews>
+			<DIFTcomCMRId />
+			<DIFTcomCMRHint />
+			<DIFTcomCMR>
+				<DIFTcomCMRPrimarySection />
+				<DIFTcomCMRPrimarySectionId />
+				<DIFTcomCMRPrimaryTheme />
+				<DIFTcomCMRPrimaryThemeId />
+				<DIFTcomCMRBrand />
+				<DIFTcomCMRBrandId />
+				<DIFTcomCMRGenre />
+				<DIFTcomCMRGenreId />
+				<DIFTcomCMRMediaType />
+				<DIFTcomCMRMediaTypeId />
+			</DIFTcomCMR>
+			<DIFTcomECPositionInText>Default</DIFTcomECPositionInText>
+			<DIFTcomHideECLevel1>False</DIFTcomHideECLevel1>
+			<DIFTcomHideECLevel2>False</DIFTcomHideECLevel2>
+			<DIFTcomHideECLevel3>True</DIFTcomHideECLevel3>
+			<DIFTcomDiscussion>True</DIFTcomDiscussion>
+			<DIFTcomArticleImage>Article size</DIFTcomArticleImage>
+		</DIFTcom>
+		<DISyndication>
+			<DISyndBeenCopied>False</DISyndBeenCopied>
+			<DISyndEdition>USA</DISyndEdition>
+			<DISyndStar>01</DISyndStar>
+			<DISyndChannel />
+			<DISyndArea />
+			<DISyndCategory />
+		</DISyndication>
+	</OutputChannels>
+	<EditorialNotes>
+		<Language>English</Language>
+		<Author>mustafa.sogancilar</Author>
+		<Guides>From Spark</Guides>
+		<Editor />
+		<Sources>
+			<Source title="FT ContentPlaceholder">
+				<SourceCode>ContentPlaceholder</SourceCode>
+				<SourceDescriptor>FT ContentPlaceholder</SourceDescriptor>
+				<SourceOnlineInclusion>True</SourceOnlineInclusion>
+				<SourceCanBeSyndicated>True</SourceCanBeSyndicated>
+			</Source>
+		</Sources>
+		<OriginalSource>Spark</OriginalSource>
+		<OriginalUUID>36f9b014-16ee-319d-b208-28b33e6b8d5f</OriginalUUID>
+		<WordCount>206</WordCount>
+		<CreationDate>20180726230000</CreationDate>
+		<EmbargoDate />
+		<ScheduledPubDate />
+		<ExpiryDate>20180726230000</ExpiryDate>
+		<ObjectLocation>/FT/Content/Links/Blogs/Templates/FTfm.xml
+		</ObjectLocation>
+		<OriginatingStory>38b81198-f18e-11e8-911c-a20996806a68
+		</OriginatingStory>
+		<InternalAnalyticsTags />
+		<CCMS>
+			<CCMSCommissionRefNo />
+			<CCMSContributorRefNo />
+			<CCMSContributorFullName />
+			<CCMSContributorInclude />
+			<CCMSContributorRights>3</CCMSContributorRights>
+			<CCMSFilingDate />
+			<CCMSProposedPublishingDate />
+		</CCMS>
+	</EditorialNotes>
+	<WiresIndexing>
+		<category />
+		<Keyword />
+		<char_count />
+		<priority />
+		<basket />
+		<title />
+		<Version />
+		<story_num />
+		<file_name />
+		<serviceid />
+		<entry_date />
+		<ref_field />
+		<take_num />
+	</WiresIndexing>
+	<DataFactoryIndexing>
+		<ADRIS_MetaData>
+			<IndexSuccess />
+			<StartTime />
+			<EndTime />
+		</ADRIS_MetaData>
+		<DFMajorCompanies />
+		<DFMinorCompanies />
+		<DFNAICS />
+		<DFWPMIndustries />
+		<DFFTSEGlobalClassifications />
+		<DFStockExchangeIndices />
+		<DFSubjects />
+		<DFCountries />
+		<DFRegions />
+		<DFWebRegions />
+		<DFWPMRegions />
+		<DFProvinces />
+		<DFFTcomDisplayCodes />
+		<DFFTSections />
+	</DataFactoryIndexing>
+</ObjectMetadata>
