@@ -25,35 +25,17 @@
 		<resilientclient.version>0.4.0</resilientclient.version>
 		<ft-build-info-maven-plugin.version>1.0.2</ft-build-info-maven-plugin.version>
 		<maven-pmd-plugin.version>3.0.1</maven-pmd-plugin.version>
-		<jacoco-maven-plugin.version>0.7.4.201502262128</jacoco-maven-plugin.version>
+		<jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
 		<maven-jxr-plugin.version>2.3</maven-jxr-plugin.version>
 		<maven-resources-plugin.version>2.6</maven-resources-plugin.version>
 		<maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
 		<maven-source-plugin.version>2.2.1</maven-source-plugin.version>
 		<maven-jar-plugin.version>2.3.2</maven-jar-plugin.version>
-		<surefire.plugin.version>2.18.1</surefire.plugin.version>
+		<surefire.plugin.version>2.22.2</surefire.plugin.version>
 		<coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
 		<target-jdk>1.8</target-jdk>
 		<argLine>-Djava.net.preferIPv4Stack=true</argLine>
 	</properties>
-
-	<repositories>
-		<repository>
-			<id>jitpack.io</id>
-			<url>https://jitpack.io</url>
-		</repository>
-		<repository>
-			<id>central</id>
-			<url>http://repo1.maven.org/maven2</url>
-		</repository>
-	</repositories>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>ft-plugin-releases</id>
-			<url>https://jitpack.io</url>
-		</pluginRepository>
-	</pluginRepositories>
 
 	<dependencies>
 		<dependency>
@@ -87,14 +69,14 @@
 			<version>${guava.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.github.Financial-Times</groupId>
+			<groupId>com.ft</groupId>
 			<artifactId>message-queue-consumer</artifactId>
-			<version>1.8.3</version>
+			<version>1.9.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.github.Financial-Times</groupId>
+			<groupId>com.ft</groupId>
 			<artifactId>message-queue-producer</artifactId>
-			<version>1.0.4.2</version>
+			<version>1.0.5</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -251,8 +233,8 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>com.github.Financial-Times</groupId>
-				<artifactId>ft-build-info-maven-plugin</artifactId>
+                <groupId>com.github.Financial-Times</groupId>
+                <artifactId>ft-build-info-maven-plugin</artifactId>
 				<version>${ft-build-info-maven-plugin.version}</version>
 				<executions>
 					<execution>
