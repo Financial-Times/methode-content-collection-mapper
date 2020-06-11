@@ -1,0 +1,7 @@
+# Values used for the deployed application.
+replicaCount: 2
+service:
+  name: methode-content-collection-mapper
+env:
+  document_store_api_url: "document-store-api:8080"
+eksCluster: true
