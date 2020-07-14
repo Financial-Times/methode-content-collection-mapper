@@ -10,13 +10,13 @@ consumer:
     backoffPeriod: 10000
     streamCount: 1
     autoCommit: true
-    offsetReset: largest
+    offsetReset: latest
   healthCheck:
     name: Can connect consumer to kafka-proxy
     severity: 2
     businessImpact: Newly published Methode Content Collections will not be available from the Content API
     technicalSummary: Tests that kafka-proxy is reachable and message can be consumed
-    panicGuideUrl: https://dewey.ft.com/kafka-proxy.html
+    panicGuideUrl: https://runbooks.in.ft.com/kafka-proxy
   systemCode: methode-web-pub
   
 producer:
@@ -33,7 +33,7 @@ producer:
     severity: 2
     businessImpact: Newly published Methode Content Collections will not be available from the Content API
     technicalSummary: Tests that kafka-proxy is reachable and the CmsPublicationEvents topic exists
-    panicGuideUrl: https://dewey.ft.com/kafka-proxy.html
+    panicGuideUrl: https://runbooks.in.ft.com/kafka-proxy
 
 contentUriPrefix: http://methode-content-collection-mapper.svc.ft.com/content-collection/
 
@@ -52,7 +52,7 @@ documentStoreApi:
         name: Can connect document-store-api
         severity: 2
         businessImpact: Newly published Methode Content Collections containing internal placeholders will not be available from the Content API
-        panicGuideUrl: https://dewey.ft.com/document-store-api.html
+        panicGuideUrl: https://runbooks.in.ft.com/kafka-proxy
         technicalSummary: Tests that document-store-api is reachable and good-to-go.
 
 validationConfiguration:

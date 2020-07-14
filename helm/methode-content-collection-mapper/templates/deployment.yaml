@@ -39,7 +39,7 @@ spec:
           valueFrom:
             configMapKeyRef:
               name: global-config
-              key: kafka.proxy.url
+              key: kafka-msk.proxy.url
         - name: DOCUMENT_STORE_API_URL
           value: {{ .Values.env.document_store_api_url }}
         ports: 
