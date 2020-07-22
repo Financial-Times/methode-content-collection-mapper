@@ -13,17 +13,18 @@ public class MessageProducingContentCollectionMapper {
   private final MessageProducer producer;
   private final EomFileToContentCollectionMapper eomFileToContentCollectionMapper;
 
-  public MessageProducingContentCollectionMapper(MessageBuilder messageBuilder,
-      MessageProducer producer, EomFileToContentCollectionMapper eomFileToContentCollectionMapper) {
+  public MessageProducingContentCollectionMapper(
+      MessageBuilder messageBuilder,
+      MessageProducer producer,
+      EomFileToContentCollectionMapper eomFileToContentCollectionMapper) {
     this.messageBuilder = messageBuilder;
     this.producer = producer;
     this.eomFileToContentCollectionMapper = eomFileToContentCollectionMapper;
   }
 
   public void mapPackage(EomFile methodeList, String tid, Date lastModified) {
-    ContentCollection contentCollection = eomFileToContentCollectionMapper
-        .mapPackage(methodeList, tid, lastModified);
+    ContentCollection contentCollection =
+        eomFileToContentCollectionMapper.mapPackage(methodeList, tid, lastModified);
     producer.send(Collections.singletonList(messageBuilder.buildMessage(contentCollection)));
   }
-
 }
