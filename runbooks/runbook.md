@@ -1,10 +1,18 @@
+<!--
+    Written in the format prescribed by https://github.com/Financial-Times/runbook.md.
+    Any future edits should abide by this format.
+-->
 # UPP - Methode Content Collection Mapper
 
 Methode Content Collection Mapper (MCCM) is responsible for listening to new content collection publishes (i.e. content package or story package) on the kafka NativeCMSPublicationEvents queue, and then transforming them into UPP format and then writing them to kafka CMSPublicationEvents queue.
 
+## Code
+
+upp-mccm
+
 ## Primary URL
 
-<https://upp-prod-delivery-glb.upp.ft.com/__methode-content-collection-mapper/>
+https://upp-prod-delivery-glb.upp.ft.com/__methode-content-collection-mapper/
 
 ## Service Tier
 
@@ -13,27 +21,6 @@ Platinum
 ## Lifecycle Stage
 
 Production
-
-## Delivered By
-
-content
-
-## Supported By
-
-content
-
-## Known About By
-
-- hristo.georgiev
-- robert.marinov
-- elina.kaneva
-- georgi.ivanov
-- tsvetan.dimitrov
-- kalin.arsov
-- mihail.mihaylov
-- boyko.boykov
-- donislav.belev
-- dimitar.terziev
 
 ## Host Platform
 
@@ -51,10 +38,19 @@ No
 
 No
 
-## Dependencies
+<!-- Placeholder - remove HTML comment markers to activate
+## Can Download Personal Data
+Choose Yes or No
 
-- kafka-proxy
-- document-store-api
+...or delete this placeholder if not applicable to this system
+-->
+
+<!-- Placeholder - remove HTML comment markers to activate
+## Can Contact Individuals
+Choose Yes or No
+
+...or delete this placeholder if not applicable to this system
+-->
 
 ## Failover Architecture Type
 
@@ -93,6 +89,14 @@ Manual
 
 Manual failover is not needed when a new version of the service is deployed to production. But if you want to do one, here are are the instructions for the failover process: <https://github.com/Financial-Times/upp-docs/tree/master/failover-guides/delivery-cluster>
 
+<!-- Placeholder - remove HTML comment markers to activate
+## Heroku Pipeline Name
+Enter descriptive text satisfying the following:
+This is the name of the Heroku pipeline for this system. If you don't have a pipeline, this is the name of the app in Heroku. A pipeline is a group of Heroku apps that share the same codebase where each app in a pipeline represents the different stages in a continuous delivery workflow, i.e. staging, production.
+
+...or delete this placeholder if not applicable to this system
+-->
+
 ## Key Management Process Type
 
 Manual
@@ -106,8 +110,8 @@ To rotate credentials you need to login to a particular cluster and update varni
 
 Service in UPP K8S delivery clusters:
 
-- Delivery-Prod-EU health: <https://upp-prod-delivery-eu.upp.ft.com/__health/__pods-health?service-name=methode-content-collection-mapper>
-- Delivery-Prod-US health: <https://upp-prod-delivery-us.upp.ft.com/__health/__pods-health?service-name=methode-content-collection-mapper>
+*   Delivery-Prod-EU health: <https://upp-prod-delivery-eu.upp.ft.com/__health/__pods-health?service-name=methode-content-collection-mapper>
+*   Delivery-Prod-US health: <https://upp-prod-delivery-us.upp.ft.com/__health/__pods-health?service-name=methode-content-collection-mapper>
 
 ## First Line Troubleshooting
 
