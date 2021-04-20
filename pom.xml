@@ -21,7 +21,7 @@
 		<jaxrs.transaction-id-handling.version>2.6.1</jaxrs.transaction-id-handling.version>
 		<uuid-utils.version>1.0.2</uuid-utils.version>
 		<jaxrs.errorhandling.version>1.1.4</jaxrs.errorhandling.version>
-		<jersey-version>1.18.1</jersey-version>
+		<jersey-version>1.19.4</jersey-version>
 		<resilientclient.version>0.4.0</resilientclient.version>
 		<ft-build-info-maven-plugin.version>1.0.2</ft-build-info-maven-plugin.version>
 		<maven-pmd-plugin.version>3.0.1</maven-pmd-plugin.version>
@@ -208,10 +208,8 @@
 						</goals>
 						<configuration>
 							<transformers>
-								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
-								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<mainClass>
 										com.ft.methodecontentcollectionmapper.MethodeContentCollectionMapperApplication
 									</mainClass>
@@ -328,7 +326,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<ignore/>
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -349,7 +347,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<ignore/>
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
